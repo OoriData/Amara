@@ -1,0 +1,117 @@
+// Not tested or used yet; will migrate here from current PLY parser soon
+
+// Resources
+// Lark tutorial: https://lark-parser.readthedocs.io/en/stable/json_tutorial.html
+// Lark docs: https://lark-parser.readthedocs.io/en/stable/index.html
+
+// Developers should make sure they have the interegular library installed (for ambiguity warnings)
+// pip install 'lark[interegular]'
+
+start : expr
+
+expr : expr LOGICAL_OP expr
+     | expr "!?=" expr  // equal check ➡ bool
+     | expr REL_OP expr
+     | expr "+" expr
+     | expr "-" expr
+     | expr MULT_OP expr
+     | expr DIVMOD_OP expr
+
+     | "(" [expr ("," expr)*] ")"
+
+     | expr "|" expr
+
+     | expr "/" relative_location_path
+     | expr "//" relative_location_path
+
+     | relative_location_path
+     | absolute_location_path
+     | abbreviated_absolute_location_path
+     | predicated_expression
+     | function_call
+     | variable_reference
+
+     | LITERAL | FLOAT | INTEGER
+        
+
+// expr : MINUS_OP expr %prec UMINUS_OP
+
+// paths
+
+absolute_location_path : "/" relative_location_path?
+
+abbreviated_absolute_location_path : "//" relative_location_path
+
+relative_location_path : step
+                       | relative_location_path "/" step
+                       | relative_location_path "//" step
+
+// path steps
+
+step : axis_specifier node_test
+
+step : node_test
+
+step : "."
+     | ".."
+
+// axis specifier
+
+axis_specifier : NAME "::"
+
+axis_specifier : "@"
+
+// tests
+
+node_test : name_test | function_call
+
+name_test : NAME | "*" | LOGICAL_OP | DIVMOD_OP
+
+predicated_expression : expr "[" expr "]" ("[" expr "]")*
+
+variable_reference : "$" NAME
+                   | "$" LOGICAL_OP
+                   | "$" DIVMOD_OP
+
+// funcall
+
+function_call : NAME formal_arguments
+                | LOGICAL_OP formal_arguments
+                | DIVMOD_OP formal_arguments
+
+formal_arguments : "(" [expr ("," expr)*] ")"
+
+// Terminals
+
+// https://github.com/lark-parser/lark/blob/master/lark/grammars/common.lark
+%import common.ESCAPED_STRING   -> DQ_STRING
+%import common.SIGNED_NUMBER    -> NUMBER
+%import common.FLOAT    -> FLOAT
+%import common.INT    -> INTEGER
+
+_SQ_STRING_INNER: /.*?/
+_SQ_STRING_ESC_INNER: _SQ_STRING_INNER /(?<!\\)(\\\\)*?/
+
+SQ_STRING : "\'" _SQ_STRING_ESC_INNER "\'"
+
+LITERAL: DQ_STRING | SQ_STRING
+
+NAME_START_CH: /
+    [A-Z]|_|[a-z]|[\xc0-\xd6]|[\xd8-\xf6]|[\xf8-\u02ff]|
+    [\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|
+    [\u2c00-\u2fef]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]|
+    [\U00010000-\U000EFFFF]
+/
+
+// additional characters allowed in NCNames after the first character
+NAME_BODY_CH: /
+    [\-\.0-9\xb7\u0300-\u036f\u203f-\u2040]
+/
+
+NAME.2: NAME_START_CH (NAME_START_CH | NAME_BODY_CH)*
+
+REL_OP = r'[<>]=?'
+
+// def t_NODETEXTTEST(t):
+//     r'text\(\)|node\(\)'
+//     return t

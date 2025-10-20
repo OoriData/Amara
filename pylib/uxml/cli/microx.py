@@ -1,0 +1,288 @@
+#!/usr/bin/env python
+'''
+microx
+
+General command line tool for Amara MicroXML & MicroXPath features
+
+Main features convert XML to MicroXML and allow you to rapidly
+extract details from large XML files on the command line.
+
+Run "microx --help" for details of the command line parameters, but
+here are some pointers to get you started.
+
+Take a simple database dump format as follows.
+
+<db>
+  <record id="1">
+    <name>Alex</name>
+    <address>123 Maple St.</address>
+  </record>
+  <record id="2">
+    <name>Bob</name>
+    <address>456 Birch Rd.</address>
+  </record>
+  <record id="3">
+    <name>Chris</name>
+    <address>789 Pine St.</address>
+  </record>
+</db>
+
+You can:
+
+Get all the full contents of name elements
+
+$ microx file.xml --expr="//name"
+<name>Alex</name>
+<name>Bob</name>
+<name>Chris</name>
+
+The --expr argument does one query from the top of the tree.
+You can use the --match arg to try a query on every element
+
+$ microx file.xml --match=name
+<name>Alex</name>
+<name>Bob</name>
+<name>Chris</name>
+
+Get the full contents of the record with ID 2
+
+$ microx file.xml --expr="//@id[.='2']"
+<record id="2">
+    <name>Bob</name>
+    <address>456 Birch Rd.</address>
+  </record>
+
+Get the full contents of the first two name elements, in document order.
+
+$ microx -c 2 --match=name file.xml
+<name>Alex</name>
+<name>Bob</name>
+
+The -c 2 argument limits to the first two matches
+
+Get the name of the record with ID 2
+
+$ microx --expr="//@id[.='2']" --foreach=name file.xml
+<name>Bob</name>
+
+Display the id and each correspoding name as follows.
+
+$ microx --match=name --foreach="@id|name" file.xml
+1
+<name>Alex</name>
+2
+<name>Bob</name>
+3
+<name>Chris</name>
+
+Or a more precise approach might be (demonstrating the use of XPath functions):
+
+$ microx --match=name --foreach="concat(@id, ': ', name)" file.xml
+1: Alex
+2: Bob
+3: Chris
+
+You can load XML or MicroXML from the Web rather than your file system
+
+$ microx --match=a --foreach="@href" http://www.w3.org/2000/07/8378/xhtml/media-types/test4.xhtml
+
+The --html flag allows parsing HTML, and the --lax flag is lenient, working with even non-well-formed XML
+
+'''
+
+import sys
+import argparse
+from itertools import chain
+import urllib.request
+
+import logging
+
+from amara.iri.iri import matches_uri_syntax
+
+from amara.uxml import tree
+from amara.uxml.tree import node, text, element
+from amara.uxml.treeutil import descendants
+from amara.uxml.uxpath import context, parse as uxpathparse
+from amara.uxml import tree, writer, xml, xmliter
+from amara.uxml import html5
+
+# FIXME: Maybe use a flag to toggle using MicroXML & XML parser?
+TB = xml.treebuilder()
+P = TB.parse
+
+
+def xpath_to(node, show_attrs):
+    ancestors = []
+    parent = node.xml_parent
+    while parent:
+        step = parent.xml_name
+        for sattr in show_attrs:
+            if sattr in parent.xml_attributes:
+                step += f'[@{sattr}="{parent.xml_attributes[sattr]}"]'
+        ancestors.append(step)
+        node = parent
+        parent = node.xml_parent
+    ancestors.reverse()
+    xp = '/'.join(ancestors)
+    return xp
+
+
+def run(command_name, command_detail, sources=None, foreach=None, partition=None,
+        limit=None, out=None, parse_html=False, parse_lax=False, show_attrs=None, verbose=False):
+    '''
+    See the command line help
+    '''
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
+    # multifile = len(sources) > 1
+
+    # FIXME: get it from cmdline
+    varmap = {}
+
+    if command_name == 'expr':
+        parsed_expr = uxpathparse(command_detail)
+    if command_name == 'match':
+        parsed_match = uxpathparse(command_detail)
+    if foreach:
+        parsed_foreach = uxpathparse(foreach)
+
+    def print_item(item):
+        if isinstance(item, node):
+            print(item.xml_encode(), file=out)
+        else:
+            print(item, file=out)
+
+    def process_partition(root):
+        if command_name == 'expr':
+            expr = command_detail
+            ctx = context(root, variables=varmap)
+            result = parsed_expr.compute(ctx)
+            for item in result:
+                if foreach:
+                    ctx = context(item, variables=varmap, force_root=False)
+                    innerresult = parsed_foreach.compute(ctx)
+                    for inneritem in innerresult:
+                        print_item(inneritem)
+                else:
+                    print_item(item)
+
+        elif command_name == 'match':
+            match = command_detail
+            for elem in chain([root], descendants(root)):
+                ctx = context(elem, variables=varmap, force_root=False)
+                result = parsed_match.compute(ctx)
+                for item in result:
+                    if foreach:
+                        ctx = context(item, variables=varmap, force_root=False)
+                        innerresult = parsed_foreach.compute(ctx)
+                        for inneritem in innerresult:
+                            print_item(inneritem)
+                    else:
+                        print_item(item)
+
+        elif command_name == 'find_text':
+            search_for = command_detail
+            for elem in chain([root], descendants(root)):
+                for node in elem.xml_children:
+                    if isinstance(node, tree.text):
+                        if search_for in node.xml_value:
+                            print(xpath_to(elem, show_attrs), file=out)
+
+    def sink():
+        while True:
+            root = yield
+            process_partition(root)
+
+    for source in sources:
+        if partition:
+            ts = xmliter.sender(('**', partition), sink())
+            # sequencer = ts
+            ts.parse_file(source)
+
+        else:
+            if parse_html:
+                root = html5.parse(source.read())
+            elif parse_lax:
+                root = html5.parse_lax_xml(source.read())
+            else:
+                # FIXME: Implement incremental parsing, e.g. by requiring conversion to MicroXML first then using that parser
+                root = P(source.read())
+            process_partition(root)
+
+    return
+
+
+COMMANDS = ('expr', 'match', 'find_text')
+
+
+def main():
+    # parser = argparse.ArgumentParser(prog="bootstrap", add_help=False)
+    parser = argparse.ArgumentParser()
+    # parser.add_argument('-o', '--output')
+    parser.add_argument('sources', metavar='FILE_OR_URL', nargs='+',
+                        help='One or more XML or MicroXML files or URLs to be parsed')
+    parser.add_argument('-o', '--out', type=argparse.FileType('w'), default=sys.stdout,
+        help='file where output should be written '
+             '(default: write to stdout)')
+    parser.add_argument('--expr', metavar='MICROXPATH',
+        help='MicroXPath expression to be executed from the root node of each source document')
+    parser.add_argument('--match', metavar='MICROXPATH',
+        help='MicroXPath expression to be executed on each element in each source document')
+    parser.add_argument('--foreach', metavar='MICROXPATH',
+        help='MicroXPath expression to be executed on each item in the result sequence from --expr or --match')
+    parser.add_argument('--partition', metavar='MICROXPATH',
+        help='Element name used to partition documents and parse only a section at a time. Useful for large files.')
+    parser.add_argument('-l', '--limit', metavar='NUMBER',
+        help='Limit the number resuts in the result sequence from --expr or --match.')
+    parser.add_argument('-v', '--verbose', action='store_true',
+        help='Show verbose error messages')
+    parser.add_argument('--html', action='store_true',
+        help='Parse input sources as HTML')
+    parser.add_argument('--lax', action='store_true',
+        help='Parse input sources in lax mode (e.g. lenient to non-well-formed XML)')
+    parser.add_argument('--find-text', metavar='TEXT',
+        help='List the various XPaths that lead to a node containing the specified text')
+    parser.add_argument('--show-attrs', metavar='ATTRIB_NAMELIST',
+        help='Comma separated list of attributes to be shown in location paths')
+    #
+    args = parser.parse_args()
+
+    mode = 'rb' if args.partition else 'r'
+    source_fps = []
+    for source in args.sources:
+        if matches_uri_syntax(source):
+            fp = urllib.request.urlopen(source)
+        else:
+            fp = open(source, mode)
+        source_fps.append(fp)
+
+    commands = []
+    for command_name in COMMANDS:
+        command_detail = getattr(args, command_name, None)
+        if command_detail:
+            commands.append((command_name, command_detail))
+
+    if not commands:
+        raise ValueError('No commands specified')
+
+    if len(commands) > 1:
+        raise ValueError('Multiple commands specified: ', ', '.join((n for (n, d) in commands)))
+
+    # Parse show_attrs into a list
+    show_attrs = []
+    if args.show_attrs:
+        show_attrs = args.show_attrs.split(',')
+
+    command_name, command_detail = commands[0]
+    run(command_name, command_detail, sources=source_fps, foreach=args.foreach,
+        partition=args.partition, limit=args.limit, out=args.out,
+        parse_html=args.html, parse_lax=args.lax, show_attrs=show_attrs,
+        verbose=args.verbose)
+    for f in source_fps:
+        f.close()
+    args.out.close()
+
+
+if __name__ == '__main__':
+    main()
