@@ -98,26 +98,26 @@ class iridict(dict):
     #
     #FIXME: make localhost the default for all schemes, not just file
     def _normalizekey(self, key):
-        key = normalize_case(normalize_percent_encoding(key))
+        key = iri.normalize_case(iri.normalize_percent_encoding(key))
         if key[:17] == 'file://localhost/':
             return 'file://' + key[16:]
         else:
             return key
 
     def __getitem__(self, key):
-        return super(uridict, self).__getitem__(self._normalizekey(key))
+        return super(iridict, self).__getitem__(self._normalizekey(key))
 
     def __setitem__(self, key, value):
-        return super(uridict, self).__setitem__(self._normalizekey(key), value)
+        return super(iridict, self).__setitem__(self._normalizekey(key), value)
 
     def __delitem__(self, key):
-        return super(uridict, self).__delitem__(self._normalizekey(key))
+        return super(iridict, self).__delitem__(self._normalizekey(key))
 
     def has_key(self, key):
-        return super(uridict, self).has_key(self._normalizekey(key))
+        return super(iridict, self).has_key(self._normalizekey(key))
 
     def __contains__(self, key):
-        return super(uridict, self).__contains__(self._normalizekey(key))
+        return super(iridict, self).__contains__(self._normalizekey(key))
 
     def __iter__(self):
         return iter(self.keys())
