@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "Amara"
@@ -31,6 +31,14 @@ dependencies = [
   "html5lib-modern",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-mock",
+  "pytest-asyncio",
+  "coverage[toml]>=6.5",
+]
+
 [project.urls]
 Documentation = "https://github.com/OoriData/Amara#readme"
 Issues = "https://github.com/OoriData/Amara/issues"
@@ -42,19 +50,15 @@ microx = "amara.uxml.cli.microx:main"
 [tool.hatch.version]
 path = "pylib/__about__.py"
 
+[tool.hatch.build.sources]
+"pylib" = "amara"
+
 # Package configuration
-[tool.setuptools.packages.find]
-where = ["pylib"]
-include = ["amara*"]
+[tool.hatch.build.targets.wheel]
+packages = ["pylib"]
 
-[tool.setuptools.package-data]
-"amara.cmodules" = ["*.c", "*.h"]
-
-# C extension configuration
-[[tool.setuptools.ext-modules]]
-name = "amara.cmodules.cxmlstring"
-sources = ["clib/xmlstring.c"]
-include-dirs = ["clib"]
+[tool.hatch.build.targets.wheel.sources]
+"pylib" = "amara"
 
 # Hatch environemnts are too fiddly. For example, from `hatch run test` I get 
 # ModuleNotFoundError: No module named 'amara'
