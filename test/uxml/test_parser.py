@@ -1,6 +1,6 @@
 import pytest
 
-from amara.uxml.parser import parse, parser, event
+from amara.uxml.parser import parse, parser, event  # noqa: F401
 # from amara.uxml.parser import parsefrags  # noqa: F401
 
 
@@ -82,7 +82,7 @@ TEST_PATTERN1.append(DOC5_FRAGS)
 DOC6_FRAGS = ([
     ('<spam x=\'&lt;y&#x3E;\' zz=\'zzz\'><a> &lt;boo!&#x3E; </a>eggs</spam>',),
 ],
-[(event.start_element, 'spam', {'x': '<y>', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, ' <boo!> '), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])
+[(event.start_element, 'spam', {'x': '<y>', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, ' <boo!> '), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])  # noqa: E501
 
 DOC6_FRAGS[0].append([ c for c in DOC6_FRAGS[0][0] ])
 

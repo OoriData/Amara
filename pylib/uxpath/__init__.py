@@ -28,7 +28,7 @@ from ply import lex, yacc
 #from amara.iri import iri
 #from amara.uxml import xml
 from amara.uxml import tree
-from amara.uxml.treeutil import *
+from amara.uxml.treeutil import *  # noqa: F403
 from amara.uxml.tree import node as nodetype
 from amara.uxpath import lexrules, parserules, xast
 from amara.uxpath.functions import BUILTIN_FUNCTIONS
@@ -129,7 +129,7 @@ def qquery(xml_thing, xpath_thing, vars=None, funcs=None, force_root=None):
         # Force UTF-8
         root = tb.parse(xml_thing.decode('utf-8'))
         force_root = True
-    if not root: return
+    if not root: return  # noqa: E701
     if isinstance(xpath_thing, str):
         parsed_expr = parse(xpath_thing)
     ctx = context(root, variables=vars, functions=funcs, force_root=force_root)

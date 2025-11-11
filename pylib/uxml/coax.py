@@ -45,8 +45,11 @@ class element(object):
         self.ancestor_stack = ancestor_stack
 
     def unparse(self):
-        if children:
-            return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>' + self.children.unparse() + '</' + self.name.encode('utf-8') + '>'  # noqa: E501, F821
+        if children:  # noqa: F821
+            return (  # noqa: E501, F821
+                '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>'
+                + self.children.unparse() + '</' + self.name.encode('utf-8') + '>'
+            )
 '''
 
 

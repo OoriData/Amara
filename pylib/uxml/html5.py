@@ -354,14 +354,14 @@ def markup_fragment(source, encoding=None):
     '''
     Parse a fragment of markup in HTML mode, and return a tree node
 
-    Warning: if you pass a string, you must make sure it's a byte string, not a Unicode object.  You might also want to wrap it with amara.lib.inputsource.text if it's not obviously XML or HTML (for example it could be confused with a file name)  # noqa: E501
+    Warning: if you pass a string, you must make sure it's a byte string, not a Unicode object.  You might also want to wrap it with amara.lib.inputsource.text if it's not obviously XML or HTML (for example it could be confused with a file name)
 
     from amara.lib import inputsource
     from amara.bindery import html
-    doc = html.markup_fragment(inputsource.text('XXX<html><body onload="" color="white"><p>Spam!<p>Eggs!</body></html>YYY'))  # noqa: E501
+    doc = html.markup_fragment(inputsource.text('XXX<html><body onload="" color="white"><p>Spam!<p>Eggs!</body></html>YYY'))
 
     See also: http://wiki.xml3k.org/Amara2/Tagsoup [TODO: Page defunct - restore it]
-    '''
+    '''  # noqa: E501
     doc = parse(source, encoding=encoding)
     frag = doc.html.body
     return frag

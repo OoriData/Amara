@@ -830,7 +830,7 @@ def DISABLED_test_non_bmp3():
         try:
             codecs.lookup(enc_name)
         except LookupError:
-            warnings.warn('Not supported on this platform')
+            warnings.warn('Not supported on this platform')  # noqa: F821
             continue
         assert encoded == iri.percent_encode(unencoded, encoding=enc_name), enc_name
         assert unencoded == iri.percent_decode(encoded, encoding=enc_name), enc_name

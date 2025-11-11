@@ -136,7 +136,7 @@ def handle_cdata(pos, window, charpat, stopchars):
                                 raise RuntimeError('Unknown named character reference: {0}'.format(repr(window[start:cursor])))  # noqa: E501
                             break
                         else:
-                            raise RuntimeError('Illegal in character reference: {0} (around {1})'.format(window[cursor]), error_context(window, start, cursor))  # noqa: E501
+                            raise RuntimeError('Illegal in character reference: {0} (around {1})'.format(window[cursor], error_context(window, start, cursor)))  # noqa: E501
             #print(start, cursor, cdata, window[cursor])
             cursor += 1
             start = cursor
@@ -266,7 +266,7 @@ def parser(handler, strict=True):
                             while NAMECHAR.match(window[advpos]):
                                 advpos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             pos = backtrackpos
                             continue
                         else:
@@ -278,7 +278,7 @@ def parser(handler, strict=True):
                             while window[pos] in ' \r\n\t':
                                 pos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             pos = backtrackpos
                             continue
 

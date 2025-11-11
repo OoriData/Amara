@@ -6,7 +6,7 @@ import sys
 import gc
 
 import pytest
-from amara.uxml import tree
+from amara.uxml import tree  # noqa: F401
 from amara.uxml import treeiter
 
 

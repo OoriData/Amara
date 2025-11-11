@@ -66,8 +66,8 @@ class node:
 
 class element(node):
     '''
-    Note: Meant to be bare bones & Pythonic. Does no integrity checking of direct manipulations, such as adding an integer to xml_children, or '1' as an attribute name  # noqa: E501
-    '''
+    Note: Meant to be bare bones & Pythonic. Does no integrity checking of direct manipulations, such as adding an integer to xml_children, or '1' as an attribute name
+    '''  # noqa: E501
     def __init__(self, name, attrs=None, parent=None):#, ancestors=None):
         node.__init__(self, parent)
         self.xml_name = name

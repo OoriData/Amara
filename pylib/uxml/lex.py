@@ -10,7 +10,7 @@ import sys
 
 import ply.lex as lex
 from ply.lex import TOKEN
-import ply.yacc as yacc
+import ply.yacc as yacc  # noqa: F401
 
 tokens = (
     'NAME','STARTTAG','ENDTAG','GT', 'EQ', 'BOM',
@@ -87,13 +87,13 @@ def t_tag_NAME(t):
     return t
 #t_NAME.__doc__ = '{0}{1}*'.format(NAMESTARTCHAR, NAMECHAR)
 
-@TOKEN('<{0}*{1}{0}*'.format(WS, NAME_PAT, WS))  # noqa: E501
+@TOKEN('<{0}*{1}{0}*'.format(WS, NAME_PAT))  # noqa: E501, F523
 def t_data_STARTTAG(t):
     t.lexer.begin('tag')
     t.value = t.value[1:].strip()
     return t
 
-@TOKEN('</{0}*{1}{0}*>'.format(WS, NAME_PAT, WS))  # noqa: E501
+@TOKEN('</{0}*{1}{0}*>'.format(WS, NAME_PAT))  # noqa: E501, F523
 def t_data_ENDTAG(t):
     t.lexer.begin('data')
     t.value = t.value[2:-1].strip()

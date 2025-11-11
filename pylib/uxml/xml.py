@@ -69,7 +69,7 @@ class ns_expat_callbacks(expat_callbacks):
         self.prefixes_rev[ns] = prefix
 
     def end_namespace(self, prefix):
-        if self._stream: del self.prefixes[prefix]
+        if self._stream: del self.prefixes[prefix]  # noqa: E701
 
     def start_element(self, name, attrs):
         #print('Start element:', name, attrs)

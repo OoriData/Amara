@@ -23,8 +23,8 @@ def descendants(elem):
 def select_elements(source):
     '''
     Yields all the elements from the source
-    source - if an element, yields all child elements in order; if any other iterator yields the elements from that iterator  # noqa: E501
-    '''
+    source - if an element, yields all child elements in order; if any other iterator yields the elements from that iterator
+    '''  # noqa: E501
     if isinstance(source, element):  # noqa: F405
         source = source.xml_children
     return filter(lambda x: isinstance(x, element), source)  # noqa: F405
@@ -141,7 +141,7 @@ def _prep_pattern(pattern):
 def select_pattern(node, pattern, state=None):
     '''
     Yield descendant nodes matching the given pattern specification
-    pattern - tuple of steps, each of which matches an element by name, with "*" acting like a wildcard, descending the tree in tuple order  # noqa: E501
+    pattern - tuple of steps, each of which matches an element by name, with "*" acting like a wildcard, descending the tree in tuple order
                 sort of like a subset of XPath in Python tuple form
     state - for internal use only
 
@@ -161,7 +161,7 @@ def select_pattern(node, pattern, state=None):
     >>> results = [ e.xml_value for e in select_pattern(root, ('**', 'x')) ]
     >>> results
     ['1', '2', '3', '4']
-    '''
+    '''  # noqa: E501
     if state is None:
         state = _prep_pattern(pattern)
     #for child in select_elements(elem):
@@ -201,8 +201,8 @@ def make_pretty(elem, depth=0, indent='  '):
     >>> len(root.xml_children)
     9
     >>> root.xml_encode()
-    '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'  # noqa: E501
-    '''
+    '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'
+    '''  # noqa: E501
     depth += 1
     updated_child_list = []
     updated_child_ix = 0

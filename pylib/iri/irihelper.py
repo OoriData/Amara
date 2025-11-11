@@ -54,7 +54,7 @@ class codex:
     '''
     Proposed helper IRI stem registry for speeding up IRI comparisons
 
-    HOWEVER: Not enough evidence yet of significant enough improvement for the added complexity. Some observations on Python 3.8.5 on MacOS:  # noqa: E501
+    HOWEVER: Not enough evidence yet of significant enough improvement for the added complexity. Some observations on Python 3.8.5 on MacOS:
 
     python -m timeit -s "i1 = 'http://example.org/spam'; i2 = 'http://example.org/eggs';" "i1 == i2; i1 == i1"
 
@@ -72,7 +72,7 @@ class codex:
 
     Some improvement with an inline prefix to shorten the string, but really worth it?...
 
-    '''
+    '''  # noqa: E501
     pass
 
 

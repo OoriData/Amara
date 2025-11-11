@@ -158,7 +158,7 @@ def iri_to_uri(iri, convertHost=False):
                         raise ValueError(_("Illegal surrogate pair in %r" % iri))  # noqa: F821
                     c = surrogate + c
                 else:
-                    raise ValueError(_("Illegal surrogate pair in %r" % iri))
+                    raise ValueError(_("Illegal surrogate pair in %r" % iri))  # noqa: F821
                 surrogate = None
             for octet in c.encode('utf-8'):
                 res += '%%%02X' % ord(octet)

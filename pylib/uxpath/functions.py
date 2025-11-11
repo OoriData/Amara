@@ -11,8 +11,8 @@ __all__ = [
 
 #import operator
 from functools import wraps
-from amara.uxml.tree import node, element, strval
-from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean  # noqa: E501
+from amara.uxml.tree import node, element, strval  # noqa: F401
+from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean  # noqa: E501, F401
 
 def boolean_arg(ctx, obj):
     '''
@@ -78,7 +78,7 @@ def name(ctx, obj=None):
 def last(ctx):
     '''
     '''
-    #FIXME: Implement
+    # FIXME: Implement
     yield -1
 
 
@@ -124,7 +124,7 @@ def concat(ctx, *strings):
     strings = flatten([ (s.compute(ctx) if callable(s) else s) for s in strings ])
     strings = (next(string_arg(ctx, s), '') for s in strings)
     #assert(all(map(lambda x: isinstance(x, str), strings)))
-    #FIXME: Check arg types
+    # FIXME: Check arg types
     yield ''.join(strings)
 
 
@@ -196,7 +196,7 @@ def normalize_space(ctx, s):
     '''
     Yields one string
     '''
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield s
 
@@ -206,7 +206,7 @@ def translate(ctx, s, subst):
     '''
     Yields one string
     '''
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield s
 
@@ -216,9 +216,9 @@ def same_lang(ctx, seq, lang):
     '''
     Yields one boolean
     '''
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
-    yield s
+    yield s  # noqa: F821
 
 
 @microxpath_function('boolean')
@@ -287,7 +287,7 @@ def foreach_(ctx, seq, expr):
     * seq: input sequence
     * expr: expression to be converted to string, then dynamically evaluated for each item on the sequence to produce the result
     '''  # noqa: E501
-    from . import context, parse as uxpathparse
+    from . import parse as uxpathparse  # noqa: F401
 
     if hasattr(seq, 'compute'):
         seq = seq.compute(ctx)
@@ -311,9 +311,11 @@ def lookup_(ctx, tableid, key):
     tableid = next(string_arg(ctx, tableid), '')
     key = next(string_arg(ctx, key), '')
     #value = ctx.
-    for item in seq:
-        innerctx = ctx.copy(item=item)
-        yield from pexpr.compute(innerctx)
+    # FIXME: Implement lookup function
+    # for item in seq:  # noqa: F821
+    #     innerctx = ctx.copy(item=item)
+    #     yield from pexpr.compute(innerctx)  # noqa: F821
+    raise NotImplementedError
 
 
 @microxpath_function('sum')
@@ -321,7 +323,7 @@ def _sum(ctx, seq):
     '''
     Yields one number, the sum, for each item in the argument sequence, of the result of converting as if by a call to number()
     '''  # noqa: E501
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield seq
 
@@ -331,7 +333,7 @@ def _floor(ctx, num):
     '''
     Yields one number, the largest (closest to positive infinity) number that is not greater than the argument and that is an integer.
     '''  # noqa: E501
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield num
 
@@ -341,7 +343,7 @@ def _ceiling(ctx, num):
     '''
     Yields one number, the smallest (closest to negative infinity) number that is not less than the argument and that is an integer.
     '''  # noqa: E501
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield num
 
@@ -351,7 +353,7 @@ def _round(ctx, num):
     '''
     Yields one number, that which is closest to the argument and that is an integer. If there are two such numbers, then the one that is closest to positive infinity is returned. If the argument is NaN, then NaN is returned. If the argument is positive infinity, then positive infinity is returned. If the argument is negative infinity, then negative infinity is returned. If the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned. If the argument is less than zero, but greater than or equal to -0.5, then negative zero is returned.
     '''  # noqa: E501
-    #FIXME: Implement
+    # FIXME: Implement
     raise NotImplementedError
     yield num
 

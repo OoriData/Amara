@@ -6,7 +6,7 @@ Raw XML writer
 from enum import Enum #https://docs.python.org/3.4/library/enum.html
 from xml.sax.saxutils import escape, quoteattr
 
-from amara.uxml import tree, xml
+from amara.uxml import tree, xml  # noqa: F401
 
 class token(Enum):
     start_open = 1
@@ -68,7 +68,7 @@ class raw(object):
         # if ctx in (context.text, context.attribute_text):
         if ctx in (context.text,):
             text = escape(text)
-        if isinstance(text, token): text = TOKENS[text]
+        if isinstance(text, token): text = TOKENS[text]  # noqa: E701
         self._fp.write(text)
         return
 
@@ -176,7 +176,7 @@ class namespacer(raw):
             prefix = self._mapping.get('@' + text, ('', ''))[1]
             if prefix:
                 self._fp.write(prefix + ':')
-        if isinstance(text, token): text = TOKENS[text]
+        if isinstance(text, token): text = TOKENS[text]  # noqa: E701
         self._fp.write(text)
         return
 
