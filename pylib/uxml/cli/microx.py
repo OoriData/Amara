@@ -99,11 +99,12 @@ import logging
 
 from amara.iri.iri import matches_uri_syntax
 
-from amara.uxml import tree
-from amara.uxml.tree import node, text, element
+from amara.uxml.tree import node
+# from amara.uxml.tree import text, element  # noqa: F401, E501
 from amara.uxml.treeutil import descendants
-from amara.uxml.uxpath import context, parse as uxpathparse
-from amara.uxml import tree, writer, xml, xmliter
+from amara.uxpath import context, parse as uxpathparse
+from amara.uxml import tree, xml, xmliter
+# from amara.uxml import writer  # noqa: F401
 from amara.uxml import html5
 
 # FIXME: Maybe use a flag to toggle using MicroXML & XML parser?
@@ -155,7 +156,7 @@ def run(command_name, command_detail, sources=None, foreach=None, partition=None
 
     def process_partition(root):
         if command_name == 'expr':
-            expr = command_detail
+            expr = command_detail  # noqa: F841
             ctx = context(root, variables=varmap)
             result = parsed_expr.compute(ctx)
             for item in result:
@@ -168,7 +169,7 @@ def run(command_name, command_detail, sources=None, foreach=None, partition=None
                     print_item(item)
 
         elif command_name == 'match':
-            match = command_detail
+            match = command_detail  # noqa: F841
             for elem in chain([root], descendants(root)):
                 ctx = context(elem, variables=varmap, force_root=False)
                 result = parsed_match.compute(ctx)
@@ -206,7 +207,7 @@ def run(command_name, command_detail, sources=None, foreach=None, partition=None
             elif parse_lax:
                 root = html5.parse_lax_xml(source.read())
             else:
-                # FIXME: Implement incremental parsing, e.g. by requiring conversion to MicroXML first then using that parser
+                # FIXME: Implement incremental parsing, e.g. by requiring conversion to MicroXML first then using that parser  # noqa: E501
                 root = P(source.read())
             process_partition(root)
 

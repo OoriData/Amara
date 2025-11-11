@@ -18,8 +18,8 @@ TEXT = 3
 def run(s):
     parent = None
     for tok in lex.run(s):
-        if tok.type in TOKEN_HANDLERS:
-            parent = TOKEN_HANDLERS[tok.type](tok, parent)
+        if tok.type in TOKEN_HANDLERS:  # noqa: F821
+            parent = TOKEN_HANDLERS[tok.type](tok, parent)  # noqa: F821
         #yield tok
     return parent
 
@@ -46,7 +46,7 @@ class element(object):
 
     def unparse(self):
         if children:
-            return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>' + self.children.unparse() + '</' + self.name.encode('utf-8') + '>'
+            return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>' + self.children.unparse() + '</' + self.name.encode('utf-8') + '>'  # noqa: E501, F821
 '''
 
 
@@ -54,21 +54,21 @@ class start_tag(object):
     def __init__(self, name, attrmap=None):
         self.name = name
         self.attrmap = attrmap
-        self.ancestor_stack = g_ancestor_stack
+        self.ancestor_stack = g_ancestor_stack  # noqa: F821  # noqa: F821
 
     def unparse(self):
-        return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>'
+        return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>'  # noqa: F821
 
 
 class start_empty_tag(start_tag):
     def unparse(self):
-        return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '/>'
+        return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '/>'  # noqa: F821
 
 
 class end_tag(object):
     def __init__(self, name, attrmap=None):
         self.name = name
-        self.ancestor_stack = g_ancestor_stack
+        self.ancestor_stack = g_ancestor_stack  # noqa: F821
 
     def unparse(self):
         return '</' + self.name.encode('utf-8') + '>'

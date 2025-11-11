@@ -2,11 +2,11 @@
 py.test test/uxml/test_treeutil.py
 '''
 
-import sys
+# import sys  # noqa: F401
 
 import pytest
 from amara.uxml import tree
-from amara.uxml.treeutil import *
+from amara.uxml.treeutil import *  # noqa: F403
 
 DOC1 = '<a><b>1</b><b>2</b><b>3</b></a>'
 DOC2 = '<a><b>1</b><c>2</c><d>3</d></a>'
@@ -15,7 +15,7 @@ DOC4 = '<a><b><x>1</x></b><c><x>2</x><d><x>3</x></d></c><x>4</x><y>5</y></a>'
 DOC5 = '<a><b><x>1</x></b><b><x>2</x></b><b><x>3</x></b><b><x>4</x></b></a>'
 
 MAKEPRETTY_CASES = [
-    (DOC4, 0, '  ', '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'),
+    (DOC4, 0, '  ', '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'),  # noqa: E501
 ]
 
 
@@ -23,7 +23,7 @@ MAKEPRETTY_CASES = [
 def test_make_pretty(doc, dep, ind, expected):
     tb = tree.treebuilder()
     root = tb.parse(doc)
-    make_pretty(root, dep, ind)
+    make_pretty(root, dep, ind)  # noqa: F405
     assert root.xml_encode() == expected
 
 

@@ -2,15 +2,16 @@
 py.test test/uxml/test_tree.py
 '''
 
-import sys
+# import sys  # noqa: F401
 import io
 import logging
 
 import pytest #Consider also installing pytest_capturelog
-from amara.uxml import tree
-from amara.uxml.tree import node, element
+# from amara.uxml import tree  # noqa: F401
+from amara.uxml.tree import element
+# from amara.uxml.tree import node  # noqa: F401
 from amara.uxml import html5
-from amara.uxml.uxpath import qquery
+from amara.uxpath import qquery
 
 
 DOC1 = '<html><head><title>HELLO</title></head><body><p>WORLD</body></html>'

@@ -172,7 +172,7 @@ def p_axis_specifier_full(p):
     AxisSpecifier : NAME AXIS_SEP
     """
     #XPath 1.0 axes - namespace
-    if p[1] not in ('self', 'attribute', 'ancestor', 'ancestor-or-self', 'attribute', 'child', 'descendant', 'descendant-or-self', 'following', 'following-sibling', 'parent', 'preceding', 'preceding-sibling'):
+    if p[1] not in ('self', 'attribute', 'ancestor', 'ancestor-or-self', 'attribute', 'child', 'descendant', 'descendant-or-self', 'following', 'following-sibling', 'parent', 'preceding', 'preceding-sibling'):  # noqa: E501
         raise RuntimeError("Invalid axis name '{0}'".format(p[1]))
     p[0] = p[1]
 

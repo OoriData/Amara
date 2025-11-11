@@ -31,13 +31,17 @@ __all__ = [
   'WINDOWS_SLASH_COMPAT', 'path_resolve',
 ]
 
-import os, sys
-import urllib, urllib.request
-import re, io
-import email
+import os  # noqa: E401
+# import sys  # noqa: F401
+import urllib  # noqa: E401, F401
+# import urllib.request  # noqa: F401
+import re  # noqa: E401
+import io  # noqa: F401
+import email  # noqa: F401
+from functools import reduce
 from string import ascii_letters
-from email.utils import formatdate as _formatdate
-from uuid import UUID, uuid1, uuid4
+from email.utils import formatdate as _formatdate  # noqa: F401
+from uuid import UUID, uuid1, uuid4  # noqa: F401
 
 from .irihelper import I
 
@@ -141,7 +145,7 @@ def iri_to_uri(iri, convertHost=False):
         if cp > 128:
             if cp < 160:
                 # FIXME: i18n
-                raise ValueError(_("Illegal character at position %d (0-based) of IRI %r" % (pos, iri)))
+                raise ValueError(_("Illegal character at position %d (0-based) of IRI %r" % (pos, iri)))  # noqa: F821
             # 'for c in iri' may give us surrogate pairs
             elif cp > 55295:
                 if cp < 56320:
@@ -151,7 +155,7 @@ def iri_to_uri(iri, convertHost=False):
                 elif cp < 57344:
                     # dc00-dfff
                     if surrogate is None:
-                        raise ValueError(_("Illegal surrogate pair in %r" % iri))
+                        raise ValueError(_("Illegal surrogate pair in %r" % iri))  # noqa: F821
                     c = surrogate + c
                 else:
                     raise ValueError(_("Illegal surrogate pair in %r" % iri))
@@ -249,7 +253,7 @@ def _init_uri_validation_regex():
     path_abempty    = r'(?:/%s)*' % segment   # begins with "/" or is empty
     #path            = r'(?:(?:%s)|(?:%s)|(?:%s)|(?:%s))?' % (path_abempty, path_absolute, path_noscheme, path_rootless)
     domainlabel     = r'[0-9A-Za-z](?:[0-9A-Za-z\-]{0,61}[0-9A-Za-z])?'
-    qualified       = r'(?:\.%s)*\.?' % domainlabel
+    qualified       = r'(?:\.%s)*\.?' % domainlabel  # noqa: F841
     reg_name        = r"(?:(?:[0-9A-Za-z\-_\.!~*'();&=+$,]|(?:%[0-9A-Fa-f]{2}))*)"
     dec_octet       = r'(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
     IPv4address     = r'(?:%s\.){3}(?:%s)' % (dec_octet, dec_octet)
@@ -369,7 +373,7 @@ def unsplit_uri_ref(iri_refSeq):
     returns a URI reference as a string.
     """
     if not isinstance(iri_refSeq, (tuple, list)):
-        raise TypeError(_("sequence expected, got %s" % type(iri_refSeq)))
+        raise TypeError(_("sequence expected, got %s" % type(iri_refSeq)))  # noqa: F821
     (scheme, authority, path, query, fragment) = iri_refSeq
     uri = ''
     if scheme is not None:
@@ -567,7 +571,7 @@ def _unquote_to_bytes(s, decodable=None):
                 append(_HEXTOBYTE[item[:2]])
                 append(item[2:])
             #FIXME: We'll need to do our own surrogate pair decoding because:
-            #>>> '\ud800'.encode('utf-8') -> UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 0: surrogates not allowed
+            #>>> '\ud800'.encode('utf-8') -> UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 0: surrogates not allowed  # noqa: E501
             else:
                 append(b'%')
                 append(item)
@@ -795,7 +799,7 @@ def relativize(targetUri, againstUri, subPathOnly=False):
     if not splitTarget[:2] == splitAgainst[:2]:
         return None
 
-    subPathSplit = [None, None] + splitTarget[2:]
+    subPathSplit = [None, None] + splitTarget[2:]  # noqa: F841
 
     targetPath = splitTarget[2]
     againstPath = splitAgainst[2] or '/'
@@ -1317,7 +1321,7 @@ def os_path_to_uri(path, attemptAbsolute=True, osname=None):
         try:
             from posixpath import isabs
         except ImportError:
-            isabs = lambda p: p[:1] == '/'
+            def isabs(p): return p[:1] == '/'  # noqa: E731
         pathisabs = isabs(path)
         if pathisabs:
             path = remove_dot_segments(path)
@@ -1546,7 +1550,7 @@ def path_resolve(paths):
     in the list against the following one. This final path is returned
     as a URI.
     """
-    if not paths: return paths
+    if not paths: return paths  # noqa: E701
     paths = [uri_to_os_path(p, attemptAbsolute=False) for p in paths]
     if not os.path.isabs(paths[0]):
         paths[0] = os.path.join(os.getcwd(), paths[0])

@@ -1,6 +1,7 @@
 import pytest
 
-from amara.uxml.parser import parse, parser, parsefrags, event
+from amara.uxml.parser import parse, parser, event
+# from amara.uxml.parser import parsefrags  # noqa: F401
 
 
 TEST_PATTERN1 = []
@@ -54,7 +55,7 @@ DOC3_FRAGS = ([
     ('<sp', 'am><a>b</a>eggs', '<', '/spam>',),
     ('< ', 'spam ', ' ><a>b</a>eggs', '<', ' / spam > ',),
 ],
-[(event.start_element, 'spam', {}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])
+[(event.start_element, 'spam', {}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])  # noqa: E501
 
 DOC3_FRAGS[0].append([ c for c in DOC3_FRAGS[0][0] ])
 
@@ -63,7 +64,7 @@ TEST_PATTERN1.append(DOC3_FRAGS)
 DOC4_FRAGS = ([
     ('<spam x=\'y\' zz=\'zzz\'><a>b</a>eggs</spam>',),
 ],
-[(event.start_element, 'spam', {'x': 'y', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])
+[(event.start_element, 'spam', {'x': 'y', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])  # noqa: E501
 
 DOC4_FRAGS[0].append([ c for c in DOC4_FRAGS[0][0] ])
 
@@ -72,7 +73,7 @@ TEST_PATTERN1.append(DOC4_FRAGS)
 DOC5_FRAGS = ([
     ('<spam x=\'&lt;y&#x3E;\' zz=\'zzz\'><a>b</a>eggs</spam>',),
 ],
-[(event.start_element, 'spam', {'x': '<y>', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])
+[(event.start_element, 'spam', {'x': '<y>', 'zz': 'zzz'}, []), (event.start_element, 'a', {}, ['spam']), (event.characters, 'b'), (event.end_element, 'a', ['spam']), (event.characters, 'eggs'), (event.end_element, 'spam', [])])  # noqa: E501
 
 DOC5_FRAGS[0].append([ c for c in DOC5_FRAGS[0][0] ])
 

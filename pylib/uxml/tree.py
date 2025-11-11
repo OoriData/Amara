@@ -51,7 +51,7 @@ class node:
         '3'
         '''
         # In line to acoid circular import
-        from amara.uxml.uxpath import context as xpathcontext, parse as xpathparse
+        from amara.uxpath import context as xpathcontext, parse as xpathparse
         force_root = not self.xml_parent
 
         if isinstance(xpath, str):
@@ -66,7 +66,7 @@ class node:
 
 class element(node):
     '''
-    Note: Meant to be bare bones & Pythonic. Does no integrity checking of direct manipulations, such as adding an integer to xml_children, or '1' as an attribute name
+    Note: Meant to be bare bones & Pythonic. Does no integrity checking of direct manipulations, such as adding an integer to xml_children, or '1' as an attribute name  # noqa: E501
     '''
     def __init__(self, name, attrs=None, parent=None):#, ancestors=None):
         node.__init__(self, parent)
@@ -154,7 +154,7 @@ class element(node):
         return
 
     def __repr__(self):
-        return u'{{uxml.element ({0}) "{1}" with {2} children}}'.format(hash(self), self.xml_name, len(self.xml_children))
+        return u'{{uxml.element ({0}) "{1}" with {2} children}}'.format(hash(self), self.xml_name, len(self.xml_children))  # noqa: E501
 
     #def unparse(self):
     #    return '<' + self.name.encode('utf-8') + unparse_attrmap(self.attrmap) + '>'
@@ -199,7 +199,7 @@ def strval(node, outermost=True):
             accumulator.append(child.xml_value)
         elif isinstance(child, element):
             accumulator.extend(strval(child, outermost=False))
-    if outermost: accumulator = ''.join(accumulator)
+    if outermost: accumulator = ''.join(accumulator)  # noqa: E701
     return accumulator
 
 
@@ -214,14 +214,14 @@ class treebuilder(object):
             if ev[0] == event.start_element:
                 new_element = element(ev[1], ev[2], self._parent)
                 #Note: not using weakrefs here because these refs are not circular
-                if self._parent: self._parent.xml_children.append(new_element)
+                if self._parent: self._parent.xml_children.append(new_element)  # noqa: E701
                 self._parent = new_element
                 #Hold a reference to the top element of the subtree being built,
                 #or it will be garbage collected as the builder moves down the tree
-                if not self._root: self._root = new_element
+                if not self._root: self._root = new_element  # noqa: E701
             elif ev[0] == event.characters:
                 new_text = text(ev[1], self._parent)
-                if self._parent: self._parent.xml_children.append(new_text)
+                if self._parent: self._parent.xml_children.append(new_text)  # noqa: E701
             elif ev[0] == event.end_element:
                 if self._parent:
                     self._parent = self._parent.xml_parent

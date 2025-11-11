@@ -5,10 +5,12 @@ Utilities for managing data inputs for Amara
 Copyright 2008-2015 Uche Ogbuji
 """
 
+import os
 import zipfile
 import functools
 from enum import Enum
-from io import StringIO, BytesIO
+from io import StringIO
+# from io import BytesIO  # noqa: F401
 
 from amara.iri import iri
 from urllib.request import urlopen
@@ -43,7 +45,7 @@ def factory(obj, defaultsourcetype=inputsourcetype.unknown, encoding=None, strea
             def zipfilegen():
                 zf = zipfile.ZipFile(obj, 'r') #Mode must be r, w or a
                 for info in zf.infolist():
-                    #From the doc: Note If the ZipFile was created by passing in a file-like object as the first argument to the constructor, then the object returned by open() shares the ZipFile’s file pointer. Under these circumstances, the object returned by open() should not be used after any additional operations are performed on the ZipFile object.
+                    #From the doc: Note If the ZipFile was created by passing in a file-like object as the first argument to the constructor, then the object returned by open() shares the ZipFile's file pointer. Under these circumstances, the object returned by open() should not be used after any additional operations are performed on the ZipFile object.  # noqa: E501
                     yield(_inputsource(zf.open(info, mode='r')))
             inputsources = zipfilegen()
         else:

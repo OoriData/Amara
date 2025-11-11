@@ -4,9 +4,9 @@
 
 """
 
-from . import tree
-from . import treeiter
-from .treeutil import *
+from . import tree  # noqa: F401
+from . import treeiter  # noqa: F401
+from .treeutil import *  # noqa: F403
 from . import html5
 
 

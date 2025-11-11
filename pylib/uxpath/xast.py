@@ -5,7 +5,7 @@
 Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpath/ast.py
 '''
 
-#Q=a; python -c "from amara.uxml import tree; tb = tree.treebuilder(); root = tb.parse('<a><b i=\"1.1\"><x>1</x></b><c i=\"1.2\"><x>2</x><d><x>3</x></d></c><x>4</x><y>5</y></a>'); from amara.uxpath import context, parse as uxpathparse; ctx = context(root); parsed_expr = uxpathparse('$Q'); result = parsed_expr.compute(ctx); print(list(result))"
+#Q=a; python -c "from amara.uxml import tree; tb = tree.treebuilder(); root = tb.parse('<a><b i=\"1.1\"><x>1</x></b><c i=\"1.2\"><x>2</x><d><x>3</x></d></c><x>4</x><y>5</y></a>'); from amara.uxpath import context, parse as uxpathparse; ctx = context(root); parsed_expr = uxpathparse('$Q'); result = parsed_expr.compute(ctx); print(list(result))"  # noqa: E501
 
 __all__ = [
     'root_node',
@@ -50,15 +50,15 @@ class root_node(node):
     @staticmethod
     #@functools.lru_cache()
     def get(elem):
-        if elem in root_node._cache: return root_node._cache[elem]
-        if isinstance(elem, root_node): return elem
+        if elem in root_node._cache: return root_node._cache[elem]  # noqa: E701
+        if isinstance(elem, root_node): return elem  # noqa: E701
         assert isinstance(elem, element), 'Cannot get root node from object {} of type {}'.format(elem, type(elem))
         curr_elem = elem
         parent = curr_elem.xml_parent
         while parent:
             curr_elem = parent
             parent = curr_elem.xml_parent
-            if parent in root_node._cache: return root_node._cache[parent]
+            if parent in root_node._cache: return root_node._cache[parent]  # noqa: E701
         return root_node._cache.setdefault(elem, root_node(curr_elem))
 
 
@@ -457,7 +457,7 @@ class step:
                 new_ctx = ctx.copy(item=child)
                 yield from self.node_test.compute(new_ctx)
         elif self.axis == 'following':
-            if not ctx.item.xml_parent: return
+            if not ctx.item.xml_parent: return  # noqa: E701
             start = ctx.item.xml_parent.xml_children.index(ctx.item) + 1
             to_process = list(ctx.item.xml_parent.xml_children)[start:]
             while to_process:
@@ -466,7 +466,7 @@ class step:
                 new_ctx = ctx.copy(item=ff)
                 yield from self.node_test.compute(new_ctx)
         elif self.axis == 'following-sibling':
-            if not ctx.item.xml_parent: return
+            if not ctx.item.xml_parent: return  # noqa: E701
             start = ctx.item.xml_parent.xml_children.index(ctx.item) + 1
             for ff in list(ctx.item.xml_parent.xml_children)[start:]:
                 new_ctx = ctx.copy(item=ff)
@@ -478,9 +478,9 @@ class step:
             else:
                 yield root_node.get(ctx.item)
         elif self.axis == 'preceding':
-            if not ctx.item.xml_parent: return
+            if not ctx.item.xml_parent: return  # noqa: E701
             start = ctx.item.xml_parent.xml_children.index(ctx.item)
-            if start == -1: return
+            if start == -1: return  # noqa: E701
             to_process = list(ctx.item.xml_parent.xml_children)[start:].reverse()
             while to_process:
                 prev = to_process[0]
@@ -488,9 +488,9 @@ class step:
                 new_ctx = ctx.copy(item=prev)
                 yield from self.node_test.compute(new_ctx)
         elif self.axis == 'preceding-sibling':
-            if not ctx.item.xml_parent: return
+            if not ctx.item.xml_parent: return  # noqa: E701
             start = ctx.item.xml_parent.xml_children.index(ctx.item)
-            if start == -1: return
+            if start == -1: return  # noqa: E701
             to_process = list(ctx.item.xml_parent.xml_children)[:start]
             to_process.reverse()
             for prev in to_process:
@@ -709,7 +709,7 @@ class function_call:
         yield from self.compute(ctx)
 
     def compute(self, ctx):
-        if not self.name in ctx.functions:
+        if self.name not in ctx.functions:  # noqa: E713
             #FIXME: g11n
             raise RuntimeError('Unknown function: {}'.format(self.name))
         func = ctx.functions[self.name]

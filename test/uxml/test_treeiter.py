@@ -1,4 +1,4 @@
-import pytest #Consider also installing pytest_capturelog
+# import pytest #Consider also installing pytest_capturelog  # noqa: F401
 from amara.uxml import treeiter
 
 

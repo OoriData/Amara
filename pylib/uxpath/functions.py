@@ -12,7 +12,7 @@ __all__ = [
 #import operator
 from functools import wraps
 from amara.uxml.tree import node, element, strval
-from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean
+from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean  # noqa: E501
 
 def boolean_arg(ctx, obj):
     '''
@@ -61,7 +61,7 @@ def name(ctx, obj=None):
     Yields one string a node name or the empty string, operating on the first item in the provided obj, or the current item if obj is omitted
     If this item is a node, yield its node name (generic identifier), otherwise yield ''
     If obj is provided, but empty, yield ''
-    '''
+    '''  # noqa: E501
     if obj is None:
         item = ctx.item
     elif hasattr(obj, 'compute'):
@@ -103,7 +103,7 @@ def string_(ctx, seq=None):
     * If an integer, no decimal point and no leading zeros
     * If a non-integer number, at least one digit before the decimal point and at least one digit after
     * If boolean, either 'true' or 'false'
-    '''
+    '''  # noqa: E501
     if seq is None:
         item = ctx.item
     elif hasattr(seq, 'compute'):
@@ -271,7 +271,7 @@ def number(ctx, seq=None):
     * If string with optional whitespace followed by an optional minus sign followed by a Number followed by whitespace, converte to the IEEE 754 number that is nearest (according to the IEEE 754 round-to-nearest rule) to the mathematical value represented by the string; in case of any other string yield NaN
     * If boolean true yield 1; if boolean false yield 0
     * If a node convert to string as if by a call to string(); yield the same value as if passed that string argument to number()
-    '''
+    '''  # noqa: E501
     if hasattr(seq, 'compute'):
         obj = next(seq.compute(ctx), '')
     else:
@@ -286,7 +286,7 @@ def foreach_(ctx, seq, expr):
 
     * seq: input sequence
     * expr: expression to be converted to string, then dynamically evaluated for each item on the sequence to produce the result
-    '''
+    '''  # noqa: E501
     from . import context, parse as uxpathparse
 
     if hasattr(seq, 'compute'):
@@ -303,11 +303,11 @@ def foreach_(ctx, seq, expr):
 @microxpath_function('lookup')
 def lookup_(ctx, tableid, key):
     '''
-    Yields a sequence of a single value, the result of looking up a value from the tables provided in the context, or an empty sequence if lookup is unsuccessful
+    Yields a sequence of a single value, the result of looking up a value from the tables provided in the context, or an empty sequence if lookup is unsuccessful  # noqa: E501
 
     * tableid: id of the lookup table to use
     * expr: expression to be converted to string, then dynamically evaluated for each item on the sequence to produce the result
-    '''
+    '''  # noqa: E501
     tableid = next(string_arg(ctx, tableid), '')
     key = next(string_arg(ctx, key), '')
     #value = ctx.
@@ -320,7 +320,7 @@ def lookup_(ctx, tableid, key):
 def _sum(ctx, seq):
     '''
     Yields one number, the sum, for each item in the argument sequence, of the result of converting as if by a call to number()
-    '''
+    '''  # noqa: E501
     #FIXME: Implement
     raise NotImplementedError
     yield seq
@@ -330,7 +330,7 @@ def _sum(ctx, seq):
 def _floor(ctx, num):
     '''
     Yields one number, the largest (closest to positive infinity) number that is not greater than the argument and that is an integer.
-    '''
+    '''  # noqa: E501
     #FIXME: Implement
     raise NotImplementedError
     yield num
@@ -340,7 +340,7 @@ def _floor(ctx, num):
 def _ceiling(ctx, num):
     '''
     Yields one number, the smallest (closest to negative infinity) number that is not less than the argument and that is an integer.
-    '''
+    '''  # noqa: E501
     #FIXME: Implement
     raise NotImplementedError
     yield num
@@ -350,7 +350,7 @@ def _ceiling(ctx, num):
 def _round(ctx, num):
     '''
     Yields one number, that which is closest to the argument and that is an integer. If there are two such numbers, then the one that is closest to positive infinity is returned. If the argument is NaN, then NaN is returned. If the argument is positive infinity, then positive infinity is returned. If the argument is negative infinity, then negative infinity is returned. If the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned. If the argument is less than zero, but greater than or equal to -0.5, then negative zero is returned.
-    '''
+    '''  # noqa: E501
     #FIXME: Implement
     raise NotImplementedError
     yield num

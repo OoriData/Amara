@@ -1,11 +1,11 @@
-import pytest
-import io, os, sys, inspect #,codecs
-import warnings
-from amara import iri
+import io  # noqa: E401
+import os
+import inspect
+# import sys  # noqa: F401
+# import warnings  # noqa: F401
+# from amara import iri  # noqa: F401
 from amara.iri.inputsource import inputsource, factory
-from amara.iri import IriError
-
-import os, inspect
+# from amara.iri import IriError  # noqa: F401
 def module_path(local_function):
    ''' returns the module path without the use of __file__.  Requires a function defined 
    locally in the module.

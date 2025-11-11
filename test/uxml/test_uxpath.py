@@ -2,14 +2,15 @@
 py.test test/uxml/test_treegc.py
 '''
 
-import sys
-import gc
+# import sys  # noqa: F401
+# import gc  # noqa: F401
 
 import pytest
 from amara.uxml import tree
-from amara.uxml.tree import node, text, element
-from amara.uxml.uxpath import context, parse as uxpathparse
-from amara.uxml.uxpath.xast import root_node
+from amara.uxml.tree import node, text
+# from amara.uxml.tree import element  # noqa: F401
+from amara.uxpath import context, parse as uxpathparse
+from amara.uxpath.xast import root_node
 
 TB = tree.treebuilder()
 P = TB.parse
@@ -49,14 +50,14 @@ RELATIVE_CASES = [
 ABSOLUTE_CASES = [
     ('/', N1, [('', '')]),
     ('/a', N1, [('a', '+1+')]),
-    ('//*', N1, [('a', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('x', '1'), ('x', '2'), ('d', ''), ('x', '3')]),
-    ('//node()', N1, [('', ''), ('a', '+1+'), ('#text', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('#text', '+2+'), ('x', '1'), ('#text', '1'), ('x', '2'), ('d', ''), ('#text', '2'), ('x', '3'), ('#text', '3'), ('#text', '4'), ('#text', '5')]),
+    ('//*', N1, [('a', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('x', '1'), ('x', '2'), ('d', ''), ('x', '3')]),  # noqa: E501
+    ('//node()', N1, [('', ''), ('a', '+1+'), ('#text', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('#text', '+2+'), ('x', '1'), ('#text', '1'), ('x', '2'), ('d', ''), ('#text', '2'), ('x', '3'), ('#text', '3'), ('#text', '4'), ('#text', '5')]),  # noqa: E501
 
     # Ensure the absolute path still works if we shift context to b first
     ('/', (N1, 'a/b'), [('', '')]),
     ('/a', (N1, 'a/b'), [('a', '+1+')]),
-    ('//*', (N1, 'a/b'), [('a', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('x', '1'), ('x', '2'), ('d', ''), ('x', '3')]),
-    ('//node()', (N1, 'a/b'), [('', ''), ('a', '+1+'), ('#text', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('#text', '+2+'), ('x', '1'), ('#text', '1'), ('x', '2'), ('d', ''), ('#text', '2'), ('x', '3'), ('#text', '3'), ('#text', '4'), ('#text', '5')]),
+    ('//*', (N1, 'a/b'), [('a', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('x', '1'), ('x', '2'), ('d', ''), ('x', '3')]),  # noqa: E501
+    ('//node()', (N1, 'a/b'), [('', ''), ('a', '+1+'), ('#text', '+1+'), ('b', '+2+'), ('c', ''), ('x', '4'), ('y', '5'), ('#text', '+2+'), ('x', '1'), ('#text', '1'), ('x', '2'), ('d', ''), ('#text', '2'), ('x', '3'), ('#text', '3'), ('#text', '4'), ('#text', '5')]),  # noqa: E501
 ]
 
 SEQUENCE_CASES = [

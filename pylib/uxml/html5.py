@@ -3,7 +3,7 @@
 """
 from amara.uxml import html5
 from amara.uxml.tree import element
-from amara.uxml.uxpath import qquery
+from amara.uxpath import qquery
 
 h = '''<!DOCTYPE html>
 <html>
@@ -37,9 +37,9 @@ __all__ = [
 # import itertools
 # import weakref
 
-from . import tree
-from . import treeiter
-from .treeutil import *
+from . import tree  # noqa: F401
+from . import treeiter  # noqa: F401
+from .treeutil import *  # noqa: F403
 #from . import xmliter
 
 try:
@@ -103,7 +103,7 @@ class element(tree.element, node):
     '''
     #name = nodes.element_base.xml_qname
     #namespace = nodes.element_base.xml_namespace
-    #xml_exclude_pnames = frozenset(('name', 'parent', 'appendChild', 'removeChild', 'removeChild', 'value', 'attributes', 'childNodes'))
+    #xml_exclude_pnames = frozenset(('name', 'parent', 'appendChild', 'removeChild', 'removeChild', 'value', 'attributes', 'childNodes'))  # noqa: E501
     @property
     def name(self):
         return getattr(self, 'xml_html5lib_name', self.xml_name)
@@ -128,7 +128,7 @@ class element(tree.element, node):
             self.xml_append(node)
         return
 
-    childNodes = property(xml_get_childNodes_, xml_set_childNodes_, None, "html5lib uses this property to manage HTML element children")
+    childNodes = property(xml_get_childNodes_, xml_set_childNodes_, None, "html5lib uses this property to manage HTML element children")  # noqa: E501
 
     def __init__(self, name, attrs=None):
         tree.element.__init__(self, name, attrs)
@@ -148,7 +148,7 @@ class element(tree.element, node):
     def xml_get_attributes_(self):
         return self.xml_attributes
 
-    attributes = property(xml_get_attributes_, xml_set_attributes_, None, "html5lib uses this property to manage HTML element attrs")
+    attributes = property(xml_get_attributes_, xml_set_attributes_, None, "html5lib uses this property to manage HTML element attrs")  # noqa: E501
 
     def cloneNode(self):
         """Return a shallow copy of the current node i.e. a node with the same
@@ -354,11 +354,11 @@ def markup_fragment(source, encoding=None):
     '''
     Parse a fragment of markup in HTML mode, and return a tree node
 
-    Warning: if you pass a string, you must make sure it's a byte string, not a Unicode object.  You might also want to wrap it with amara.lib.inputsource.text if it's not obviously XML or HTML (for example it could be confused with a file name)
+    Warning: if you pass a string, you must make sure it's a byte string, not a Unicode object.  You might also want to wrap it with amara.lib.inputsource.text if it's not obviously XML or HTML (for example it could be confused with a file name)  # noqa: E501
 
     from amara.lib import inputsource
     from amara.bindery import html
-    doc = html.markup_fragment(inputsource.text('XXX<html><body onload="" color="white"><p>Spam!<p>Eggs!</body></html>YYY'))
+    doc = html.markup_fragment(inputsource.text('XXX<html><body onload="" color="white"><p>Spam!<p>Eggs!</body></html>YYY'))  # noqa: E501
 
     See also: http://wiki.xml3k.org/Amara2/Tagsoup [TODO: Page defunct - restore it]
     '''

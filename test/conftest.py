@@ -1,5 +1,6 @@
 import pytest
-import os, inspect
+import os  # noqa: E401
+import inspect
 
 def module_path(local_function):
     '''

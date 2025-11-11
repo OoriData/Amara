@@ -31,36 +31,48 @@ class event(Enum):
 
 BOM = '\uFEFF'
 
-CHARACTER = re.compile('[\u0009\u000a\u0020-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd' \
-            '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd' \
-            '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd' \
-            '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]')
+CHARACTER = re.compile(  # noqa: E501
+    '[\u0009\u000a\u0020-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd'
+    '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd'
+    '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd'
+    '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]'
+)
 
 #MicroXML production [7] Basically CHARACTER - [\u0026\u003C\u003E]
-DATACHAR = re.compile('[\u0009\u000a\u0020-\u0025\u0027-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd' \
-            '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd' \
-            '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd' \
-            '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]')
+DATACHAR = re.compile(  # noqa: E501
+    '[\u0009\u000a\u0020-\u0025\u0027-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd'
+    '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd'
+    '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd'
+    '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]'
+)
 
-NAMESTARTCHAR = re.compile('[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D' \
-            '\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF' \
-            '\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]')
+NAMESTARTCHAR = re.compile(  # noqa: E501
+    '[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D'
+    '\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF'
+    '\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]'
+)
 
-NAMECHAR =  re.compile('[0-9A-Za-z_\u00B7-\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D' \
-            '\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF' \
-            '\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]')
+NAMECHAR = re.compile(  # noqa: E501
+    '[0-9A-Za-z_\u00B7-\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D'
+    '\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF'
+    '\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]'
+)
 
 #For single quoted attrs
-ATTRIBVALCHAR_SGL = re.compile('[\u0020-\u0025\u0028-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd' \
-            '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd' \
-            '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd' \
-            '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]')
+ATTRIBVALCHAR_SGL = re.compile(  # noqa: E501
+    '[\u0020-\u0025\u0028-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd'
+    '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd'
+    '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd'
+    '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]'
+)
 
 #For double quoted attrs
-ATTRIBVALCHAR_DBL = re.compile('[\u0020-\u0021\\\u0023-\u0025\u0027-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd' \
-            '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd' \
-            '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd' \
-            '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]')
+ATTRIBVALCHAR_DBL = re.compile(  # noqa: E501
+    '[\u0020-\u0021\\\u0023-\u0025\u0027-\u003B\u003D\u003F-\u007e\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd'
+    '\U00010000-\U0001fffd\U00020000-\U0002fffd\U00030000-\U0003fffd\U00040000-\U0004fffd\U00050000-\U0005fffd\U00060000-\U0006fffd'
+    '\U00070000-\U0007fffd\U00080000-\U0008fffd\U00090000-\U0009fffd\U000a0000-\U000afffd\U000b0000-\U000bfffd\U000c0000-\U000cfffd'
+    '\U000d0000-\U000dfffd\U000e0000-\U000efffd\U000f0000-\U000ffffd\U00100000-\U0010fffd]'
+)
 
 # Tokens
 
@@ -72,7 +84,7 @@ NAMEDCHARENTOK = re.compile('[a-zA-Z0-9]')
 CHARNAMES =  (('lt', "<"), ('gt', ">"), ('amp', "&"), ('quot', '"'), ('apos', "'"))
 #CHARNAMES = { 'lt': "<", 'gt': ">", 'amp': "&", 'quot': '"', 'apos': "'"}
 
-#Make this one a utility function since we'll hope to make the transition into reading cdata rarely enough to endure the function-call overhead
+#Make this one a utility function since we'll hope to make the transition into reading cdata rarely enough to endure the function-call overhead  # noqa: E501
 def handle_cdata(pos, window, charpat, stopchars):
     '''
     Return (result, new_position) tuple.
@@ -104,7 +116,7 @@ def handle_cdata(pos, window, charpat, stopchars):
                         elif window[cursor] == ';':
                             c = chr(int(window[start:cursor], 16))
                             if not CHARACTER.match(c):
-                                raise RuntimeError('Character reference gives an illegal character: {0}'.format('&' + window[start:cursor] + ';'))
+                                raise RuntimeError('Character reference gives an illegal character: {0}'.format('&' + window[start:cursor] + ';'))  # noqa: E501
                             cdata += c
                             break
                         else:
@@ -121,10 +133,10 @@ def handle_cdata(pos, window, charpat, stopchars):
                                     #cursor += 1 #Skip ;
                                     break
                             else:
-                                raise RuntimeError('Unknown named character reference: {0}'.format(repr(window[start:cursor])))
+                                raise RuntimeError('Unknown named character reference: {0}'.format(repr(window[start:cursor])))  # noqa: E501
                             break
                         else:
-                            raise RuntimeError('Illegal in character reference: {0} (around {1})'.format(window[cursor]), error_context(window, start, cursor))
+                            raise RuntimeError('Illegal in character reference: {0} (around {1})'.format(window[cursor]), error_context(window, start, cursor))  # noqa: E501
             #print(start, cursor, cdata, window[cursor])
             cursor += 1
             start = cursor
@@ -139,12 +151,12 @@ def error_context(window, start, end, size=10):
 def parser(handler, strict=True):
     next(handler) #Prime the coroutine
     #abspos = 0
-    line_count = 1
-    col_count = 1
+    line_count = 1  # noqa: F841
+    col_count = 1  # noqa: F841
     window = ''
     pos = 0
     wlen = 0
-    backtrack = 0
+    backtrack = 0  # noqa: F841
     curr_state = state.pre_element
     done = False
     element_stack = []
@@ -155,7 +167,7 @@ def parser(handler, strict=True):
                 #import pdb; pdb.set_trace()
                 frag, done = yield
                 #print(frag, done)
-                if not frag: continue #Ignore empty additions
+                if not frag: continue  # noqa: E701 #Ignore empty additions
                 window += frag
                 wlen += len(frag)
                 #FIXME: throw away unneeded, prior bits of window here
@@ -168,7 +180,7 @@ def parser(handler, strict=True):
                             while window[pos] in ' \r\n\t':
                                 pos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             continue
                         #if not done and pos == wlen:
                         #    need_input = True
@@ -186,7 +198,7 @@ def parser(handler, strict=True):
                             while window[pos] in ' \r\n\t':
                                 pos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             continue
                         if curr_state == state.pre_tag_gi and window[pos] == '/':
                             pos += 1
@@ -203,7 +215,7 @@ def parser(handler, strict=True):
                                 while NAMECHAR.match(window[advpos]):
                                     advpos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             continue
                         else:
                             gi = window[pos:advpos]
@@ -215,7 +227,7 @@ def parser(handler, strict=True):
                             while window[pos] in ' \r\n\t':
                                 pos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             continue
                         #Check for attributes
                         if pending_event == event.start_element and NAMESTARTCHAR.match(window[pos]):
@@ -273,7 +285,7 @@ def parser(handler, strict=True):
                         if window[pos] == '=':
                             pos += 1
                         else:
-                            raise RuntimeError('Expected \'=\', found {0} (around {1})'.format(window[pos], error_context(window, pos, pos)))
+                            raise RuntimeError('Expected \'=\', found {0} (around {1})'.format(window[pos], error_context(window, pos, pos)))  # noqa: E501
                         if not done and pos == wlen:
                             need_input = True
                             pos = backtrackpos
@@ -285,8 +297,8 @@ def parser(handler, strict=True):
                             #backtrackpos = pos
                             #pos + 1 to skip the opening quote
                             aval, newpos = handle_cdata(pos+1, window, attrpat, openattr)
-                            if aval == None:
-                                if not done: need_input = True
+                            if aval is None:  # noqa: E711
+                                if not done: need_input = True  # noqa: E701
                                 #Don't advance to newpos, so effectively backtrack
                                 continue
                                 #if window[pos] != openattr:
@@ -296,12 +308,12 @@ def parser(handler, strict=True):
                             curr_state = state.complete_tag
                     if curr_state == state.in_element:
                         chars, newpos = handle_cdata(pos, window, DATACHAR, '<')
-                        if chars == None:
-                            if not done: need_input = True
+                        if chars is None:  # noqa: E711
+                            if not done: need_input = True  # noqa: E701
                             #Don't advance to newpos, so effectively backtrack
                             continue
                         pos = newpos
-                        if chars: handler.send((event.characters, chars))
+                        if chars: handler.send((event.characters, chars))  # noqa: E701
                         if window[pos] == '<':
                             pos += 1
                         #advpos = pos
@@ -317,7 +329,7 @@ def parser(handler, strict=True):
                             while window[pos] in ' \r\n\t':
                                 pos += 1
                         except IndexError:
-                            if not done: need_input = True #Do not advance until we have enough input
+                            if not done: need_input = True  # noqa: E701 #Do not advance until we have enough input
                             continue
                         #if not done and pos == wlen:
                         #    need_input = True
@@ -328,7 +340,7 @@ def parser(handler, strict=True):
                             raise RuntimeError('Junk after document element')
                     #print('END1')
                 #print('END2')
-            sentinel = yield #Avoid StopIteration in parent from running off enf of coroutine?
+            sentinel = yield  # noqa: F841 #Avoid StopIteration in parent from running off enf of coroutine?
         except GeneratorExit:
             #close() called
             pass #Any cleanup

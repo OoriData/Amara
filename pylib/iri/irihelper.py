@@ -2,11 +2,13 @@
 Various IRI utilities
 """
 
-import os, sys
-import io
-import urllib, urllib.request
-import email
-from email.utils import formatdate as _formatdate
+import os  # noqa: E401
+# import sys  # noqa: F401
+# import io  # noqa: F401
+import urllib  # noqa: E401, F401
+# import urllib.request  # noqa: F401
+# import email  # noqa: F401
+from email.utils import formatdate as _formatdate  # noqa: F401
 
 __all__ = ['iriref', 'iridict', 'codex']
 
@@ -25,7 +27,7 @@ class iriref(str):
     '''
     def __new__(cls, value):
         if not iri.matches_uri_ref_syntax(value):
-            raise ValueError(_('Invalid IRI reference: "{0}"'.format(value)))
+            raise ValueError(_('Invalid IRI reference: "{0}"'.format(value)))  # noqa: F821
         self = super(iriref, cls).__new__(cls, value)
         #self = unicode, cls).__new__(cls, value)
         # optionally do stuff to self here
@@ -45,14 +47,14 @@ class iriref(str):
         # Just dumb concatenation for now
         return iriref(str(self) + str(tail))
 
-I = iriref
+I = iriref  # noqa: E741
 
 
 class codex:
     '''
     Proposed helper IRI stem registry for speeding up IRI comparisons
 
-    HOWEVER: Not enough evidence yet of significant enough improvement for the added complexity. Some observations on Python 3.8.5 on MacOS:
+    HOWEVER: Not enough evidence yet of significant enough improvement for the added complexity. Some observations on Python 3.8.5 on MacOS:  # noqa: E501
 
     python -m timeit -s "i1 = 'http://example.org/spam'; i2 = 'http://example.org/eggs';" "i1 == i2; i1 == i1"
 

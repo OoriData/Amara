@@ -103,7 +103,7 @@ class sender:
                     else:
                         next_state = self._only_name(next_state, stage)
                 elif isinstance(stage, tuple):
-                    new_tuple = tuple(( name_test(substage) if isinstance(substage, str) else substage for substage in stage ))
+                    new_tuple = tuple(( name_test(substage) if isinstance(substage, str) else substage for substage in stage ))  # noqa: E501
                     next_state = self._any(next_state, new_tuple)
                 else:
                     raise ValueError('Cannot interpret pattern component {0}'.format(repr(stage)))
@@ -128,7 +128,7 @@ class sender:
                 parent = self._parents[ix]
                 if ev[0] == event.start_element:
                     evstack.append(ev)
-                    #Keep track of the depth while we're building elements. When we ge back to 0 depth, we're done for this subtree
+                    #Keep track of the depth while we're building elements. When we ge back to 0 depth, we're done for this subtree  # noqa: E501
                     if building_depth:
                         building_depth += 1
                         self._building_depths[ix] = building_depth
@@ -138,15 +138,15 @@ class sender:
                         new_element = element(ev[1], ev[2], parent)
                         #if parent: parent().xml_children.append(weakref.ref(new_element))
                         #Note: not using weakrefs here because these refs are not circular
-                        if parent: parent.xml_children.append(new_element)
+                        if parent: parent.xml_children.append(new_element)  # noqa: E701
                         parent = self._parents[ix] = new_element
                         #Hold a reference to the top element of the subtree being built,
                         #or it will be garbage collected as the builder moves down the tree
-                        if building_depth == 1: self._roots[ix] = new_element
+                        if building_depth == 1: self._roots[ix] = new_element  # noqa: E701
                 elif ev[0] == event.characters:
                     if building_depth:
                         new_text = text(ev[1], parent)
-                        if parent: parent.xml_children.append(new_text)
+                        if parent: parent.xml_children.append(new_text)  # noqa: E701
                 elif ev[0] == event.end_element:
                     evstack.pop()
                     if building_depth:

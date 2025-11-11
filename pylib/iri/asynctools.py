@@ -5,7 +5,7 @@ import asyncio
 
 try:
     import aiohttp
-    from aiohttp import ClientSession
+    from aiohttp import ClientSession  # noqa: F401
 
     AIOHTTP_ERROR_MENAGERIE = (
         ssl.CertificateError,
@@ -37,7 +37,7 @@ def go_async(launch_task, close_loop=False):
     '''
     loop = asyncio.get_event_loop()
     resp = loop.run_until_complete(launch_task)
-    if close_loop: loop.close()
+    if close_loop: loop.close()  # noqa: E701
     return resp
 
 #async def progress_indicator docstring rendered here for easy testing, for now
@@ -72,7 +72,7 @@ async def progress_indicator(delay, loop=None, out=sys.stdout, max_width=80):
     >>> _ = go_async(asyncio.gather(x(), progress_indicator(0.5)))
     1...2....3.>>> 
     '''
-    if not loop: loop = asyncio.get_event_loop()
+    if not loop: loop = asyncio.get_event_loop()  # noqa: E701
     count_to_width = 0
     while True:
         try:
@@ -136,7 +136,7 @@ class req_tracer:
     >>> 
     '''
     def __init__(self):
-        #Store the tracked timings according to a key specified in the request context (or use None key if none provided)
+        #Store the tracked timings according to a key specified in the request context (or use None key if none provided)  # noqa: E501
         self.request = {}
         self.trace_config = aiohttp.TraceConfig()
  
@@ -192,8 +192,8 @@ class req_tracer:
         context.chunk_received = since_start
  
     async def end_t(self, session, context, params):
-        if not context.trace_request_ctx: return
-        #Store the tracked timings according to a key specified in the request context (or use None key if none provided)
+        if not context.trace_request_ctx: return  # noqa: E701
+        #Store the tracked timings according to a key specified in the request context (or use None key if none provided)  # noqa: E501
         reqid = context.trace_request_ctx.get('reqid')
         time_now = session.loop.time()
         total_elapsed = time_now - context.start_t

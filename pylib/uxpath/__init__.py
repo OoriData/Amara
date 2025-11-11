@@ -39,7 +39,7 @@ __all__ = ['lexer', 'parser', 'parse', 'context']#, 'serialize']
 lexer = None
 #BUILDuxpath.LEX=1; python -m amara.uxpath
 if 'BUILDuxpath.LEX' in os.environ:
-    # Build with cached lex table. Meant for developers to do and commit the updated file. Will fail without write access on the source directory.
+    # Build with cached lex table. Meant for developers to do and commit the updated file. Will fail without write access on the source directory.  # noqa: E501
     lexdir = os.path.dirname(lexrules.__file__)
     try:
         lexer = lex.lex(module=lexrules, optimize=1, outputdir=lexdir,
@@ -67,12 +67,12 @@ def parse(xpath):
     >>> from amara.uxpath import parse
     >>> xp = parse('a/text()')
     '''
-    # Explicitly specify the lexer created above, otherwise parser.parse will use the most-recently created lexer. (Ewww! Wha?!)
+    # Explicitly specify the lexer created above, otherwise parser.parse will use the most-recently created lexer. (Ewww! Wha?!)  # noqa: E501
     return parser.parse(xpath, lexer=lexer)#, debug=True)
 
 
 class context(object):
-    def __init__(self, item, pos=None, variables=None, functions=None, lookuptables=None, extras=None, parent=None, force_root=True):
+    def __init__(self, item, pos=None, variables=None, functions=None, lookuptables=None, extras=None, parent=None, force_root=True):  # noqa: E501
         '''
         
         Note: No explicit context size. Will be dynamically computed if needed
@@ -96,7 +96,7 @@ class context(object):
         lookuptables = lookuptables if lookuptables else self.lookuptables
         extras = extras if extras else self.extras
         parent = parent if parent else self.parent
-        return context(item, pos=pos, variables=variables, functions=functions, lookuptables=lookuptables, extras=extras, parent=parent, force_root=False)
+        return context(item, pos=pos, variables=variables, functions=functions, lookuptables=lookuptables, extras=extras, parent=parent, force_root=False)  # noqa: E501
 
 
 def qquery(xml_thing, xpath_thing, vars=None, funcs=None, force_root=None):

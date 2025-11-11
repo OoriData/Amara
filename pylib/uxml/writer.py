@@ -162,7 +162,7 @@ class namespacer(raw):
                     self._fp.write(TOKENS[token.pre_attr])
                     self._fp.write('xmlns:' + k if k else 'xmlns')
                     self._fp.write(TOKENS[token.attr_equals])
-                    # Check whether we need to extract quoteattr(v) at [0] and [-1] and write these in start_element context
+                    # Check whether we need to extract quoteattr(v) at [0] and [-1] and write these in start_element context  # noqa: E501
                     self._fp.write(quoteattr(v))
                 #self._fp.write(TOKENS[token.pre_attr])
                 self._ns_handled = True

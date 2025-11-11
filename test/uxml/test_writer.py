@@ -1,5 +1,5 @@
 import io
-import pytest
+# import pytest  # noqa: F401
 from amara.uxml import writer
 
 

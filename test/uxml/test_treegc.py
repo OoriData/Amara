@@ -31,7 +31,7 @@ def test_ts_gc(doc, pat, expected):
             #Refs from parent & from frame objects
             assert sys.getrefcount(e) == 6
             #old_e is down to 2 refcounts, 1 from the old_e container & 1 from accumulator
-            if old_e is not None: assert sys.getrefcount(old_e) == 2
+            if old_e is not None: assert sys.getrefcount(old_e) == 2  # noqa: E701
             accumulator.append(e.xml_value)
             old_e = e
             gc.collect() #Make sure circrefs have been GCed

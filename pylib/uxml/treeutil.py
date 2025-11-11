@@ -6,16 +6,16 @@ rather than methods.
 '''
 
 import itertools
-from amara.uxml.tree import *
+from amara.uxml.tree import *  # noqa: F403
 
-__all__ = ['descendants', 'select_elements', 'select_name', 'select_name_pattern', 'select_value', 'select_attribute', 'following_siblings', 'select_pattern', 'make_pretty']
+__all__ = ['descendants', 'select_elements', 'select_name', 'select_name_pattern', 'select_value', 'select_attribute', 'following_siblings', 'select_pattern', 'make_pretty']  # noqa: E501
 
 def descendants(elem):
     '''
     Yields all the elements descendant of elem in document order
     '''
     for child in elem.xml_children:
-        if isinstance(child, element):
+        if isinstance(child, element):  # noqa: F405
             yield child
             yield from descendants(child)
 
@@ -23,11 +23,11 @@ def descendants(elem):
 def select_elements(source):
     '''
     Yields all the elements from the source
-    source - if an element, yields all child elements in order; if any other iterator yields the elements from that iterator
+    source - if an element, yields all child elements in order; if any other iterator yields the elements from that iterator  # noqa: E501
     '''
-    if isinstance(source, element):
+    if isinstance(source, element):  # noqa: F405
         source = source.xml_children
-    return filter(lambda x: isinstance(x, element), source)
+    return filter(lambda x: isinstance(x, element), source)  # noqa: F405
 
 
 def select_name(source, name):
@@ -54,7 +54,7 @@ def select_value(source, val):
     source - if an element, starts with all child elements in order; can also be any other iterator
     val - string value to match
     '''
-    if isinstance(source, element):
+    if isinstance(source, element):  # noqa: F405
         source = source.xml_children
     return filter(lambda x: x.xml_value == val, source)
 
@@ -87,25 +87,25 @@ MATCHED_STATE = object()
 
 def attr_test(next, name):
     def _attr_test(node):
-        if isinstance(node, element) and name in node.xml_attributes:
+        if isinstance(node, element) and name in node.xml_attributes:  # noqa: F405
             return next
     return _attr_test
 
 def name_test(next, name):
     def _name_test(node):
-        if isinstance(node, element) and node.xml_name == name:
+        if isinstance(node, element) and node.xml_name == name:  # noqa: F405
             return next
     return _name_test
 
 def elem_test(next):
     def _elem_test(node):
-        if isinstance(node, element):
+        if isinstance(node, element):  # noqa: F405
             return next
     return _elem_test
 
 def any_until(next):
     def _any_until(node):
-        if isinstance(node, element):
+        if isinstance(node, element):  # noqa: F405
             next_next = next(node)
             if next_next is not None:
                 return next_next
@@ -141,7 +141,7 @@ def _prep_pattern(pattern):
 def select_pattern(node, pattern, state=None):
     '''
     Yield descendant nodes matching the given pattern specification
-    pattern - tuple of steps, each of which matches an element by name, with "*" acting like a wildcard, descending the tree in tuple order
+    pattern - tuple of steps, each of which matches an element by name, with "*" acting like a wildcard, descending the tree in tuple order  # noqa: E501
                 sort of like a subset of XPath in Python tuple form
     state - for internal use only
 
@@ -165,7 +165,7 @@ def select_pattern(node, pattern, state=None):
     if state is None:
         state = _prep_pattern(pattern)
     #for child in select_elements(elem):
-    if isinstance(node, element):
+    if isinstance(node, element):  # noqa: F405
         for child in node.xml_children:
             new_state = state(child)
             if new_state == MATCHED_STATE:
@@ -201,19 +201,19 @@ def make_pretty(elem, depth=0, indent='  '):
     >>> len(root.xml_children)
     9
     >>> root.xml_encode()
-    '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'
+    '<a>\n  <b>\n    <x>1</x>\n  </b>\n  <c>\n    <x>2</x>\n    <d>\n      <x>3</x>\n    </d>\n  </c>\n  <x>4</x>\n  <y>5</y>\n</a>'  # noqa: E501
     '''
     depth += 1
     updated_child_list = []
     updated_child_ix = 0
     for child in elem.xml_children:
-        if isinstance(child, element):
+        if isinstance(child, element):  # noqa: F405
             if updated_child_ix % 2:
                 updated_child_list.append(child)
                 updated_child_ix += 1
             else:
                 #It's the turn for text, but we have an element
-                new_text = text('\n' + indent*depth, elem)
+                new_text = text('\n' + indent*depth, elem)  # noqa: F405
                 updated_child_list.append(new_text)
                 updated_child_list.append(child)
                 updated_child_ix += 2
@@ -226,12 +226,12 @@ def make_pretty(elem, depth=0, indent='  '):
                 updated_child_ix += 1
             else:
                 #Only whitespace, so replace with proper indentation
-                new_text = text('\n' + indent*depth, elem)
+                new_text = text('\n' + indent*depth, elem)  # noqa: F405
                 updated_child_list.append(new_text)
                 updated_child_ix += 1
     #Trailing indentation might be needed
     if not(updated_child_ix % 2):
-        new_text = text('\n' + indent*(depth-1), elem)
+        new_text = text('\n' + indent*(depth-1), elem)  # noqa: F405
         updated_child_list.append(new_text)
         #updated_child_ix += 1 #About to be done, so not really needed
     elem.xml_children = updated_child_list

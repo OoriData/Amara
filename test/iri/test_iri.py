@@ -1,6 +1,9 @@
 import pytest
-import os, unittest, sys, codecs
-import warnings
+import codecs  # noqa: E401
+# import os  # noqa: F401
+# import unittest  # noqa: F401
+# import sys  # noqa: F401
+# import warnings  # noqa: F401
 from amara import iri
 from amara.iri import irihelper
 from amara.iri import IriError
@@ -254,7 +257,7 @@ absolutize_test_cases = [
     ('http:this', 'http:base', 'http:this'),
     ('.//g', 'f:/a', 'f://g'),
     ('b/c//d/e', 'f://example.org/base/a', 'f://example.org/base/b/c//d/e'),
-    ('m2@example.ord/c2@example.org', 'mid:m@example.ord/c@example.org', 'mid:m@example.ord/m2@example.ord/c2@example.org'),
+    ('m2@example.ord/c2@example.org', 'mid:m@example.ord/c@example.org', 'mid:m@example.ord/m2@example.ord/c2@example.org'),  # noqa: E501
     ('mini1.xml', 'file:///C:/DEV/Haskell/lib/HXmlToolbox-3.01/examples/', 'file:///C:/DEV/Haskell/lib/HXmlToolbox-3.01/examples/mini1.xml'),
     ('../b/c', 'foo:a/y/z', 'foo:a/b/c'),
 
@@ -780,7 +783,7 @@ def DISABLED_test_percent_encode_template(unencoded, encoded):
     if len(unencoded) > 10:
         test_title = unencoded[:11] + '...'
     else:
-        test_title = unencoded
+        test_title = unencoded  # noqa: F841
     assert encoded == iri.percent_encode(unencoded)
     assert unencoded == iri.percent_decode(encoded)
 
@@ -847,7 +850,7 @@ def test_urns_pubids():
 # URI reference syntax
 def test_uriref_syntax():
     for testuri in good_uri_references:
-        assert 1 == iri.matches_uri_ref_syntax(testuri), "Good URI ref: '%s' Mistakenly tests as invalid" % repr(testuri)
+        assert 1 == iri.matches_uri_ref_syntax(testuri), "Good URI ref: '%s' Mistakenly tests as invalid" % repr(testuri)  # noqa: E501
 
     for testuri in bad_uri_references:
         assert 0 == iri.matches_uri_ref_syntax(testuri), "Bad URI ref: '%s' Mistakenly tests as valid" % repr(testuri)
@@ -901,7 +904,7 @@ def test_uri_to_os_path():
                 if isinstance(uri, str):
                     testname = repr(uri)
                 else:
-                    testname = uri
+                    testname = uri  # noqa: F841
                 if osname == 'nt':
                     path = nt_path
                 elif osname == 'posix':
@@ -935,7 +938,7 @@ def test_os_path_to_uri():
             else:
                 break
             if uri is None:
-                with pytest.raises(IriError, osname+': '+subgroupname+': '+testname+': '+path):
+                with pytest.raises(IriError, osname+': '+testname+': '+path):  # noqa: F821
                         iri.os_path_to_uri(path, attemptAbsolute=False, osname=osname)
             else:
                 assert uri == iri.os_path_to_uri(path, attemptAbsolute=False, osname=osname), \

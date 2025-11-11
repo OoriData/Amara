@@ -2,8 +2,9 @@
 
 import io
 import os
-import pytest
-from amara.uxml import xmliter, xml
+# import pytest  # noqa: F401
+from amara.uxml import xmliter
+# from amara.uxml import xml  # noqa: F401
 from amara.uxml import writer
 
 
