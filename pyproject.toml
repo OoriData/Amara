@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
   "nameparser",
   "ply",
-  "html5lib-modern",
+  "html5lib-modern",  # https://github.com/ashleysommer/html5lib-modern
 ]
 
 [project.optional-dependencies]
