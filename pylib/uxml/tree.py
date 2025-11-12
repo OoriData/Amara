@@ -153,6 +153,15 @@ class element(node):
             raise ValueError(f'Element {self} has no child {child}')
         return
 
+    def xml_descendants(self):
+        '''
+        Yields all the elements descendant of self in document order
+        '''
+        for child in self.xml_children:
+            if isinstance(child, element):  # noqa: F405
+                yield child
+                yield from child.xml_descendants()
+
     def __repr__(self):
         return u'{{uxml.element ({0}) "{1}" with {2} children}}'.format(hash(self), self.xml_name, len(self.xml_children))  # noqa: E501
 

@@ -73,10 +73,10 @@ for child in root.xml_children:
     if hasattr(child, 'xml_attributes'):
         print(f"Element: {child.xml_name}")
         print(f"Spam attr: {child.xml_attributes.get('spam')}")
-        print(f"Text: {child.xml_text}")
+        print(f"Text: {child.xml_value}")
 
 # Iterate through all elements
-for elem in root.xml_iter():
+for elem in root.xml_descendants():
     print(f"Found element: {elem.xml_name}")
 ```
 
@@ -95,7 +95,7 @@ doc = html5.parse(HTML_DOC)
 print(doc.xml_name)  # "html"
 ```
 
-### XPath-like Queries
+### XPath-like Queries (MicroXPath)
 
 ```python
 from amara.uxpath import xpath

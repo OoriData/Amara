@@ -1,9 +1,7 @@
 # amara3.util
-"""
-Some utilities for general use in Amara
-
-Copyright 2008-2015 Uche Ogbuji
-"""
+'''
+Almost certainly obsolete
+'''
 
 def coroutine(func):
     '''
@@ -62,5 +60,3 @@ def parse_requirement(r):
         return '{} ({})'.format(package, version)
     else:
         return r
-
-

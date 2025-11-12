@@ -19,32 +19,12 @@ except ImportError:
     pass
 
 
-def go_async(launch_task, close_loop=False):
-    '''
-    Convenience function to launch a coroutine asynchronously
-    Basically Python 3.7's asyncio.run() simulated for 3.5 & 3.6
-    
-    WARNING: You can generally only use this once per interpreter session, unless you set close_loop=False
-
-    >>> import asyncio
-    >>> from amara.asynctools import go_async
-    >>> async def x():
-    ...     await asyncio.sleep(1)
-    ...     return 'ndewo'
-    >>> retval = go_async(x())
-    >>> retval
-    'ndewo'
-    '''
-    loop = asyncio.get_event_loop()
-    resp = loop.run_until_complete(launch_task)
-    if close_loop: loop.close()  # noqa: E701
-    return resp
 
 #async def progress_indicator docstring rendered here for easy testing, for now
 '''
 import sys
 import asyncio
-from amara.asynctools import progress_indicator, go_async
+from amara.asynctools import progress_indicator
 async def x():
     print('1', end='')
     await asyncio.sleep(2)
@@ -52,7 +32,7 @@ async def x():
     await asyncio.sleep(2)
     print('3', end='')
 
-_ = go_async(asyncio.gather(x(), progress_indicator(0.5)))
+_ = asyncio.run(asyncio.gather(x(), progress_indicator(0.5)))
 '''
 
 async def progress_indicator(delay, loop=None, out=sys.stdout, max_width=80):
@@ -62,14 +42,14 @@ async def progress_indicator(delay, loop=None, out=sys.stdout, max_width=80):
 
     >>> import sys
     >>> import asyncio
-    >>> from amara.asynctools import progress_indicator, go_async
+    >>> from amara.asynctools import progress_indicator
     >>> async def x():
     ...     print('1', end='')
     ...     await asyncio.sleep(2)
     ...     print('2', end='')
     ...     await asyncio.sleep(2)
     ...     print('3', end='')
-    >>> _ = go_async(asyncio.gather(x(), progress_indicator(0.5)))
+    >>> _ = asyncio.run(asyncio.gather(x(), progress_indicator(0.5)))
     1...2....3.>>> 
     '''
     if not loop: loop = asyncio.get_event_loop()  # noqa: E701
@@ -95,8 +75,9 @@ async def progress_indicator(delay, loop=None, out=sys.stdout, max_width=80):
 
 #class req_tracer docstring rendered here for easy testing, for now
 '''
+import asyncio
 import aiohttp
-from amara.asynctools import go_async, req_tracer
+from amara.asynctools import req_tracer
 rtimings = req_tracer()
 async def access_site():
     url = 'http://artscene.textfiles.com/information/ascii-newmedia.txt'
@@ -108,7 +89,7 @@ async def access_site():
             print('Web request took', t, 'seconds')
             return response
 
-resp = go_async(access_site())
+resp = asyncio.run(access_site())
 '''
 
 class req_tracer:
@@ -118,8 +99,9 @@ class req_tracer:
     
     See: https://docs.aiohttp.org/en/stable/tracing_reference.html#aiohttp-client-tracing-reference
     
+    >>> import asyncio
     >>> import aiohttp
-    >>> from amara.asynctools import go_async, req_tracer
+    >>> from amara.asynctools import req_tracer
     >>> rtimings = req_tracer()
     >>> async def access_site():
     ...     url = 'http://artscene.textfiles.com/information/ascii-newmedia.txt'
@@ -131,7 +113,7 @@ class req_tracer:
     ...             print('Web request took', t, 'seconds')
     ...             return response
     ... 
-    >>> resp = go_async(access_site())
+    >>> resp = asyncio.run(access_site())
     Web request took 0.121 seconds
     >>> 
     '''
@@ -212,4 +194,3 @@ class req_tracer:
             'is_redirect': is_redirect,
             'total_elapsed': total_elapsed
         })
-

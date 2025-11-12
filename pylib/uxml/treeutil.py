@@ -14,10 +14,7 @@ def descendants(elem):
     '''
     Yields all the elements descendant of elem in document order
     '''
-    for child in elem.xml_children:
-        if isinstance(child, element):  # noqa: F405
-            yield child
-            yield from descendants(child)
+    yield from elem.xml_descendants()
 
 
 def select_elements(source):
