@@ -1,9 +1,9 @@
-"""
+'''
 Tests for IRI reference attribute access (scheme, authority, path, query, fragment, etc.)
 
 These tests ensure that all components from split_uri_ref are accessible
 as attributes on iriref objects.
-"""
+'''
 import pytest
 from amara.iri import I, split_uri_ref, split_authority
 
@@ -167,18 +167,18 @@ iri_attr_test_cases = [
 
 @pytest.mark.parametrize('iri_string,expected', iri_attr_test_cases)
 def test_iri_attributes(iri_string, expected):
-    """Test that all IRI components are accessible as attributes"""
+    '''Test that all IRI components are accessible as attributes'''
     url = I(iri_string)
     
     # Test all expected attributes
     for attr_name, expected_value in expected.items():
         actual_value = getattr(url, attr_name)
         assert actual_value == expected_value, \
-            f"Attribute {attr_name} mismatch for {iri_string}: expected {expected_value!r}, got {actual_value!r}"
+            f'Attribute {attr_name} mismatch for {iri_string}: expected {expected_value!r}, got {actual_value!r}'
 
 
 def test_iri_attributes_match_split_uri_ref():
-    """Test that attributes match the output of split_uri_ref"""
+    '''Test that attributes match the output of split_uri_ref'''
     test_uris = [
         'http://example.org/a/b/c',
         'http://user:pass@example.org:8080/path?query#frag',
@@ -191,17 +191,17 @@ def test_iri_attributes_match_split_uri_ref():
         url = I(uri_string)
         scheme, auth, path, query, frag = split_uri_ref(str(url))
         
-        assert url.scheme == scheme, f"scheme mismatch for {uri_string}"
-        assert url.authority == auth, f"authority mismatch for {uri_string}"
-        assert url.auth == auth, f"auth alias mismatch for {uri_string}"
-        assert url.path == path, f"path mismatch for {uri_string}"
-        assert url.query == query, f"query mismatch for {uri_string}"
-        assert url.fragment == frag, f"fragment mismatch for {uri_string}"
-        assert url.frag == frag, f"frag alias mismatch for {uri_string}"
+        assert url.scheme == scheme, f'scheme mismatch for {uri_string}'
+        assert url.authority == auth, f'authority mismatch for {uri_string}'
+        assert url.auth == auth, f'auth alias mismatch for {uri_string}'
+        assert url.path == path, f'path mismatch for {uri_string}'
+        assert url.query == query, f'query mismatch for {uri_string}'
+        assert url.fragment == frag, f'fragment mismatch for {uri_string}'
+        assert url.frag == frag, f'frag alias mismatch for {uri_string}'
 
 
 def test_iri_authority_components():
-    """Test that authority subcomponents (userinfo, host, port) are correctly extracted"""
+    '''Test that authority subcomponents (userinfo, host, port) are correctly extracted'''
     test_cases = [
         ('http://example.org/path', None, 'example.org', None),
         ('http://example.org:80/path', None, 'example.org', '80'),
@@ -216,15 +216,15 @@ def test_iri_authority_components():
         userinfo, host, port = split_authority(url.authority) if url.authority else (None, None, None)
         
         assert url.userinfo == userinfo, \
-            f"userinfo mismatch for {uri_string}: expected {userinfo!r}, got {url.userinfo!r}"
+            f'userinfo mismatch for {uri_string}: expected {userinfo!r}, got {url.userinfo!r}'
         assert url.host == host, \
-            f"host mismatch for {uri_string}: expected {host!r}, got {url.host!r}"
+            f'host mismatch for {uri_string}: expected {host!r}, got {url.host!r}'
         assert url.port == port, \
-            f"port mismatch for {uri_string}: expected {port!r}, got {url.port!r}"
+            f'port mismatch for {uri_string}: expected {port!r}, got {url.port!r}'
 
 
 def test_iri_attributes_caching():
-    """Test that attributes are cached and don't cause repeated parsing"""
+    '''Test that attributes are cached and don't cause repeated parsing'''
     url = I('http://example.org/a/b/c?x=1#frag')
     
     # Access attributes multiple times
@@ -243,7 +243,7 @@ def test_iri_attributes_caching():
 
 
 def test_iri_attributes_with_call():
-    """Test that attributes work correctly after using the call syntax"""
+    '''Test that attributes work correctly after using the call syntax'''
     base = I('http://example.org/')
     url = base('a/b/c?x=1#frag')
     
@@ -256,7 +256,7 @@ def test_iri_attributes_with_call():
 
 
 def test_iri_attributes_edge_cases():
-    """Test edge cases for IRI attributes"""
+    '''Test edge cases for IRI attributes'''
     # Empty string (should be valid per RFC 3986)
     url = I('')
     assert url.scheme is None

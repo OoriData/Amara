@@ -165,6 +165,7 @@ class sender:
     def parse(self, doc):
         h = self._handler()
         p = parser(h)
+        next(p)  # Prime the coroutine
         p.send((doc, False))
         p.send(('', True))  # Wrap it up
         return

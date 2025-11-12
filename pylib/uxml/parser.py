@@ -10,8 +10,6 @@ Hand-crafted parser for MicroXML [1], inspired to some extent by James Clark's J
 import re
 from enum import Enum #https://docs.python.org/3.4/library/enum.html
 
-from amara.util import coroutine
-
 class state(Enum):
     pre_element = 1
     in_element = 2
@@ -147,7 +145,6 @@ def error_context(window, start, end, size=10):
     return window[max(0, start-size):min(end+size, len(window))]
 
 
-@coroutine
 def parser(handler, strict=True):
     next(handler) #Prime the coroutine
     #abspos = 0
@@ -355,18 +352,21 @@ echo "for e in parsefrags(('<spa', 'm>eggs</spam>')): print(e)" >> /tmp/spam.py
 python -m pdb -c "b /Users/uche/.local/venv/py3/lib/python3.3/site-packages/amara3/uxml/parser.py:173" /tmp/spam.py
 '''
 
-@coroutine
 def handler(accumulator):
-    while True:
-        event = yield
-        accumulator.append(event)
-    return
+    def handler_generator():
+        while True:
+            event = yield
+            accumulator.append(event)
+    gen = handler_generator()
+    next(gen)  # Prime the coroutine
+    return gen
 
 
 def parse(text):
     acc = []
     h = handler(acc)
     p = parser(h)
+    next(p)  # Prime the coroutine
     p.send((text, True))
     p.close()
     h.close()
@@ -378,6 +378,7 @@ def parsefrags(textfrags):
     acc = []
     h = handler(acc)
     p = parser(h)
+    next(p)  # Prime the coroutine
     #fragcount = len(textfrags)
     for i, frag in enumerate(textfrags):
         p.send((frag, False))

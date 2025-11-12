@@ -56,28 +56,27 @@ print(encoded)  # 'hello%20world%21'
 ### XML Processing
 
 ```python
-from amara.uxml import xml
+from amara.uxml import parse
 
-SAMPLE_XML = """<monty>
+SAMPLE_XML = '''<monty>
   <python spam="eggs">What do you mean "bleh"</python>
   <python ministry="abuse">But I was looking for argument</python>
-</monty>"""
+</monty>'''
 
 # Parse XML
-builder = xml.treebuilder()
-root = builder.parse(SAMPLE_XML)
+root = parse(SAMPLE_XML)
 print(root.xml_name)  # "monty"
 
 # Access children and attributes
 for child in root.xml_children:
     if hasattr(child, 'xml_attributes'):
-        print(f"Element: {child.xml_name}")
-        print(f"Spam attr: {child.xml_attributes.get('spam')}")
-        print(f"Text: {child.xml_value}")
+        print(f'Element: {child.xml_name}')
+        print(f'Spam attr: {child.xml_attributes.get('spam')}')
+        print(f'Text: {child.xml_value}')
 
 # Iterate through all elements
 for elem in root.xml_descendants():
-    print(f"Found element: {elem.xml_name}")
+    print(f'Found element: {elem.xml_name}')
 ```
 
 ### HTML5 Processing
@@ -85,11 +84,11 @@ for elem in root.xml_descendants():
 ```python
 from amara.uxml import html5
 
-HTML_DOC = """<!DOCTYPE html>
+HTML_DOC = '''<!DOCTYPE html>
 <html>
   <head><title>Example</title></head>
   <body><p class="plain">Hello World</p></body>
-</html>"""
+</html>'''
 
 doc = html5.parse(HTML_DOC)
 print(doc.xml_name)  # "html"
@@ -98,9 +97,9 @@ print(doc.xml_name)  # "html"
 ### XPath-like Queries (MicroXPath)
 
 ```python
-from amara.uxpath import xpath
+from amara.uxml import parse
 
-SAMPLE_XML = """<catalog>
+SAMPLE_XML = '''<catalog>
   <book id="1">
     <title>Python Programming</title>
     <author>John Doe</author>
@@ -109,20 +108,20 @@ SAMPLE_XML = """<catalog>
     <title>Web Development</title>
     <author>Jane Smith</author>
   </book>
-</catalog>"""
+</catalog>'''
 
-builder = xml.treebuilder()
-root = builder.parse(SAMPLE_XML)
+root = parse(SAMPLE_XML)
 
 # Find all book titles
-titles = xpath.select(root, '//book/title')
+titles = root.xml_xpath('//book/title')
 for title in titles:
-    print(title.xml_text)
+    print(title.xml_value)
 
 # Find book by ID
-book = xpath.select(root, "//book[@id='2']")
+book = list(root.xml_xpath("//book[@id='2']"))
 if book:
-    print(f"Found: {book[0].xml_children[0].xml_text}")
+    # First child is whitespace. 2nd is the "title" element
+    print(f'Found: {book[0].xml_children[1].xml_value}')
 ```
 
 ### Command-Line Tool
@@ -176,4 +175,3 @@ Amara was originally an open source project I created, renaming and expanding on
 Quote from the [revival ticket](https://github.com/uogbuji/amara3-xml/issues/28):
 
 > The Amara saga continues! I don't exactly remember why I decided to dead end the [Amara PyPI project](https://pypi.org/project/Amara/) when it hit 2.0, but I moved to a series of Amara 3 generation projects ([amara3.iri](https://pypi.org/project/amara3.iri/), [amara3.xml](https://pypi.org/project/amara3.xml/) & [amara3-names](https://github.com/uogbuji/amara3-names/)). Those were far more lone wolf efforts, but at [Oori Data](https://www.oori.dev/) we're seeing a lot of need for the sorts of capability that's inchoate in Amara 3.
-

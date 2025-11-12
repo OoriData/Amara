@@ -117,6 +117,7 @@ def test_feed_frags1(docfrag, events):
     acc = []
     h = handler(acc)
     p = parser(h)
+    next(p)  # Prime the coroutine (parser will prime handler internally)
     lendoc = len(docfrag)
     for i, frag in enumerate(docfrag):
         #print(i, frag)
