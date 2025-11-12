@@ -241,7 +241,7 @@ def _init_uri_validation_regex():
     # # based on the ABNF in RFC 3986,
     # # "Uniform Resource Identifier (URI): Generic Syntax"
     pchar           = r"(?:[0-9A-Za-z\-_\.!~*'();:@&=+$,]|(?:%[0-9A-Fa-f]{2}))"
-    fragment        = r"(?:[0-9A-Za-z\-_\.!~*'();:@&=+$,/?]|(?:%[0-9A-Fa-f]{2}))*"
+    fragment        = r"(?:[0-9A-Za-z\-_\.!~*();:@&=+$,/?]|(?:%[0-9A-Fa-f]{2}))*"
     query           = fragment
     segment_nz_nc   = r"(?:[0-9A-Za-z\-_\.!~*'();@&=+$,]|(?:%[0-9A-Fa-f]{2}))+"
     segment_nz      = r'%s+' % pchar

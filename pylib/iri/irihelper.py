@@ -47,6 +47,72 @@ class iriref(str):
         # Just dumb concatenation for now
         return iriref(str(self) + str(tail))
 
+    def _get_components(self):
+        """Cache the result of split_uri_ref to avoid repeated parsing"""
+        if not hasattr(self, '_cached_components'):
+            self._cached_components = iri.split_uri_ref(str(self))
+        return self._cached_components
+
+    def _get_authority_parts(self):
+        """Cache the result of split_authority to avoid repeated parsing"""
+        if not hasattr(self, '_cached_authority_parts'):
+            auth = self.authority
+            if auth:
+                self._cached_authority_parts = iri.split_authority(auth)
+            else:
+                self._cached_authority_parts = (None, None, None)
+        return self._cached_authority_parts
+
+    @property
+    def scheme(self):
+        """The scheme component of the IRI reference"""
+        return self._get_components()[0]
+
+    @property
+    def authority(self):
+        """The authority component of the IRI reference"""
+        return self._get_components()[1]
+
+    @property
+    def auth(self):
+        """Alias for authority"""
+        return self.authority
+
+    @property
+    def path(self):
+        """The path component of the IRI reference"""
+        return self._get_components()[2]
+
+    @property
+    def query(self):
+        """The query component of the IRI reference"""
+        return self._get_components()[3]
+
+    @property
+    def fragment(self):
+        """The fragment component of the IRI reference"""
+        return self._get_components()[4]
+
+    @property
+    def frag(self):
+        """Alias for fragment"""
+        return self.fragment
+
+    @property
+    def userinfo(self):
+        """The userinfo component extracted from the authority"""
+        return self._get_authority_parts()[0]
+
+    @property
+    def host(self):
+        """The host component extracted from the authority"""
+        return self._get_authority_parts()[1]
+
+    @property
+    def port(self):
+        """The port component extracted from the authority"""
+        return self._get_authority_parts()[2]
+
 I = iriref  # noqa: E741
 
 

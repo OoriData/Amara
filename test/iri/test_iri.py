@@ -172,7 +172,7 @@ absolutize_test_cases = [
     ('../../../../g', BASE_URI[4], 'http:///g'), # may change to http:///s//a/../../../g
 
     # from Dan Connelly's tests in http://www.w3.org/2000/10/swap/uripath.py
-    ("bar:abc", "foo:xyz", "bar:abc"),
+    ('bar:abc', 'foo:xyz', 'bar:abc'),
     ('../abc', 'http://example/x/y/z', 'http://example/x/abc'),
     ('http://example/x/abc', 'http://example2/x/y/z', 'http://example/x/abc'),
     ('../r', 'http://ex/x/y/z', 'http://ex/x/r'),
@@ -203,7 +203,7 @@ absolutize_test_cases = [
     ('./#blort', 'file:/some/dir/foo', 'file:/some/dir/#blort'),
     ('./#', 'file:/some/dir/foo', 'file:/some/dir/#'),
     # Ryan Lee
-    ("./", "http://example/x/abc.efg", "http://example/x/"),
+    ('./', 'http://example/x/abc.efg', 'http://example/x/'),
 
     #
     # Graham Klyne's tests
@@ -366,7 +366,7 @@ good_uri_references = [
     '#ccc',
     '#',
     #'/', # repeat of test above
-    "A'C",
+    'A\'C',
     #-- escapes
     'http://example.org/aaa%2fbbb#ccc',
     'http://example.org/aaa%2Fbbb#ccc',
@@ -402,7 +402,7 @@ bad_uri_references = [
     # at http://www.dwheeler.com/secure-programs/url.pl
     'http://www yahoo.com',
     'http://www.yahoo.com/hello world/',
-    'http://www.yahoo.com/yelp.html#"',
+    'http://www.yahoo.com/yelp.html#\'',
     #
     # the following test cases are from a Haskell program by Graham Klyne
     # at http://www.ninebynine.org/Software/HaskellUtils/Network/URITest.hs
@@ -413,7 +413,7 @@ bad_uri_references = [
     '%ZZ',
     '%AZ',
     'A C',
-    r"A\'C",
+    r'A\'C',
     'A`C',
     'A<C',
     'A>C',
@@ -631,24 +631,24 @@ win_make_urllib_safe_tests = [
 #
 public_id_tests = [
     # examples from RFC 3151
-    ("ISO/IEC 10179:1996//DTD DSSSL Architecture//EN",
-     "urn:publicid:ISO%2FIEC+10179%3A1996:DTD+DSSSL+Architecture:EN"),
-    ("ISO 8879:1986//ENTITIES Added Latin 1//EN",
-     "urn:publicid:ISO+8879%3A1986:ENTITIES+Added+Latin+1:EN"),
-    ("-//OASIS//DTD DocBook XML V4.1.2//EN",
-     "urn:publicid:-:OASIS:DTD+DocBook+XML+V4.1.2:EN"),
-    ("+//IDN example.org//DTD XML Bookmarks 1.0//EN//XML",
-     "urn:publicid:%2B:IDN+example.org:DTD+XML+Bookmarks+1.0:EN:XML"),
-    ("-//ArborText::prod//DTD Help Document::19970708//EN",
-     "urn:publicid:-:ArborText;prod:DTD+Help+Document;19970708:EN"),
-    ("foo",
-     "urn:publicid:foo"),
-    ("3+3=6",
-     #"urn:publicid:3%2B3=6" # RFC 2396
-     "urn:publicid:3%2B3%3D6"), # RFC 2396bis
-    ("-//Acme, Inc.//DTD Book Version 1.0",
-     #"urn:publicid:-:Acme,+Inc.:DTD+Book+Version+1.0" # RFC 2396
-     "urn:publicid:-:Acme%2C+Inc.:DTD+Book+Version+1.0"), # RFC 2396bis
+    ('ISO/IEC 10179:1996//DTD DSSSL Architecture//EN',
+     'urn:publicid:ISO%2FIEC+10179%3A1996:DTD+DSSSL+Architecture:EN'),
+    ('ISO 8879:1986//ENTITIES Added Latin 1//EN',
+     'urn:publicid:ISO+8879%3A1986:ENTITIES+Added+Latin+1:EN'),
+    ('-//OASIS//DTD DocBook XML V4.1.2//EN',
+     'urn:publicid:-:OASIS:DTD+DocBook+XML+V4.1.2:EN'),
+    ('+//IDN example.org//DTD XML Bookmarks 1.0//EN//XML',
+     'urn:publicid:%2B:IDN+example.org:DTD+XML+Bookmarks+1.0:EN:XML'),
+    ('-//ArborText::prod//DTD Help Document::19970708//EN',
+     'urn:publicid:-:ArborText;prod:DTD+Help+Document;19970708:EN'),
+    ('foo',
+     'urn:publicid:foo'),
+    ('3+3=6',
+     #'urn:publicid:3%2B3=6' # RFC 2396
+     'urn:publicid:3%2B3%3D6'), # RFC 2396bis
+    ('-//Acme, Inc.//DTD Book Version 1.0',
+     #'urn:publicid:-:Acme,+Inc.:DTD+Book+Version+1.0' # RFC 2396
+     'urn:publicid:-:Acme%2C+Inc.:DTD+Book+Version+1.0'), # RFC 2396bis
 ]
 
 # Test cases for percent_encode and percent_decode =============================
@@ -668,9 +668,9 @@ percent_encode_tests = [
     # The reserved set: characters that need to be percent-encoded when they
     # are not being used for their reserved purpose. We expect that they
     # will all be percent-encoded.
-    (":/?#[]@!$&'()*+,;=",
+    (':/?#[]@!$&\'()*+,;=',
      '%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D'),
-    (":/?#[]@!$&'()*+,;=",
+    (':/?#[]@!$&\'()*+,;=',
      '%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D'),
     # Disallowed characters: characters not in the reserved or unreserved
     # sets; these must be converted to percent-encoded octets, always.
@@ -678,9 +678,9 @@ percent_encode_tests = [
     # We'll just test some reasonable subsets.
     #
     #   1. the rest of printable ASCII
-    (' %^{}|\\"<>`',
+    (' %^{}|\\\'<>`',
      '%20%25%5E%7B%7D%7C%5C%22%3C%3E%60'),
-    (' %^{}|\\"<>`',
+    (' %^{}|\\\'<>`',
      '%20%25%5E%7B%7D%7C%5C%22%3C%3E%60'),
     #   2. the ASCII / C0 control set
     (''.join(map(chr, range(32))) + '\x7f',
@@ -776,7 +776,7 @@ def test_percent_encoding_equivalence(uri, expected):
 #class Test_percent_encode_decode(unittest.TestCase):
 #    '''PercentEncode and PercentDecode'''
 #def test_percent_encode(self):
-#print "Creating test", "test_percent_encode_%i"%count
+#print 'Creating test', 'test_percent_encode_%i'%count
 @pytest.mark.parametrize('unencoded,encoded', pct_enc_normalization_tests)
 #FIXME: You can't just pass a whole URL to percent_encode or percent_decode. You must isolate the components
 def DISABLED_test_percent_encode_template(unencoded, encoded):
@@ -794,7 +794,7 @@ def DISABLED_test_percent_encode_template(unencoded, encoded):
 #FIXME: Disabled pending further examination
 
 def DISABLED_test_non_bmp1():
-    '''non-BMP characters: ""\U00010000\U0010FFFD""'''
+    '''non-BMP characters: ''\U00010000\U0010FFFD'''''
     unencoded = '\U00010000\U0010FFFD'
     encoded = '%F0%90%80%80%F4%8F%BF%BD'
     assert encoded == iri.percent_encode(unencoded), unencoded
@@ -842,18 +842,18 @@ def DISABLED_test_non_bmp3():
 # URNs & PubIDs
 def test_urns_pubids():
     for publicid, urn in public_id_tests:
-        assert urn == iri.public_id_to_urn(publicid), "public_id_to_urn: %s"%publicid
+        assert urn == iri.public_id_to_urn(publicid), 'public_id_to_urn: %s'%publicid
 
     for publicid, urn in public_id_tests:
-        assert publicid == iri.urn_to_public_id(urn), "urn_to_public_id: %s"%urn
+        assert publicid == iri.urn_to_public_id(urn), 'urn_to_public_id: %s'%urn
 
 # URI reference syntax
 def test_uriref_syntax():
     for testuri in good_uri_references:
-        assert 1 == iri.matches_uri_ref_syntax(testuri), "Good URI ref: '%s' Mistakenly tests as invalid" % repr(testuri)  # noqa: E501
+        assert 1 == iri.matches_uri_ref_syntax(testuri), 'Good URI ref: `%s` Mistakenly tests as invalid' % repr(testuri)  # noqa: E501
 
     for testuri in bad_uri_references:
-        assert 0 == iri.matches_uri_ref_syntax(testuri), "Bad URI ref: '%s' Mistakenly tests as valid" % repr(testuri)
+        assert 0 == iri.matches_uri_ref_syntax(testuri), 'Bad URI ref: `%s` Mistakenly tests as valid' % repr(testuri)
 
 # Absolutize
 def test_absolutize():
@@ -987,5 +987,5 @@ def test_normalize_path_segments_in_uri():
 
 
 if __name__ == '__main__':
-    raise SystemExit("Use py.test")
+    raise SystemExit('Use py.test')
 
