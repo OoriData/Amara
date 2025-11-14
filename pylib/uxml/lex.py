@@ -11,7 +11,7 @@ import sys
 
 import ply.lex as lex
 from ply.lex import TOKEN
-import ply.yacc as yacc
+# import ply.yacc as yacc
 
 tokens = (
     'NAME','STARTTAG','ENDTAG','GT', 'EQ', 'BOM',

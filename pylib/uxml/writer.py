@@ -9,7 +9,7 @@ Raw XML writer
 from enum import Enum #https://docs.python.org/3.4/library/enum.html
 from xml.sax.saxutils import escape, quoteattr
 
-from amara.uxml import tree, xml
+from amara.uxml import tree  #, xml
 
 class token(Enum):
     start_open = 1

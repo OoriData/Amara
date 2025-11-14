@@ -50,15 +50,23 @@ microx = "amara.uxml.cli.microx:main"
 [tool.hatch.version]
 path = "pylib/__about__.py"
 
-[tool.hatch.build.sources]
-"pylib" = "amara"
-
 # Package configuration
+# Note: We only remap pylib->amara for wheels, not for sdist
+# This ensures both direct wheel builds and wheels-from-sdist work correctly
 [tool.hatch.build.targets.wheel]
 packages = ["pylib"]
 
 [tool.hatch.build.targets.wheel.sources]
 "pylib" = "amara"
+
+[tool.hatch.build.targets.sdist]
+# Preserve original pylib structure in sdist so wheel-from-sdist can find it
+only-include = [
+  "pylib",
+  "test",
+  "README.md",
+  "pyproject.toml",
+]
 
 # Hatch environemnts are too fiddly. For example, from `hatch run test` I get 
 # ModuleNotFoundError: No module named 'amara'

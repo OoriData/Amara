@@ -9,7 +9,7 @@ Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpat
 '''
 
 from amara.uxpath import xast
-from amara.uxpath.lexrules import tokens
+# from amara.uxpath.lexrules import tokens
 
 precedence = (
     ('left', 'LOGICAL_OP'),

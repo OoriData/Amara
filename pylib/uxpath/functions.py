@@ -14,8 +14,9 @@ __all__ = [
 
 #import operator
 from functools import wraps
-from amara.uxml.tree import node, element, strval
-from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean
+from amara.uxml.tree import node  # , element, strval
+# from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean
+from amara.uxpath.xast import to_string, to_number, to_boolean
 
 def boolean_arg(ctx, obj):
     '''

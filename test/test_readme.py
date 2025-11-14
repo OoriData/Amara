@@ -3,7 +3,6 @@ Test suite to verify that all Python code examples in README.md work correctly.
 Helps prevent regressions when the API changes.
 '''
 
-import pytest
 from amara.iri import I, iri
 from amara.uxml import parse
 from amara.uxml import html5

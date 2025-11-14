@@ -7,7 +7,7 @@ Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpat
 
 '''
 
-import re
+# import re
 from ply.lex import TOKEN
 
 
