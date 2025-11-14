@@ -29,7 +29,8 @@ class iriref(str):
     >>> I('spam eggs')
     [raises ValueError]
 
-    The `I()` (iriref) class now supports direct attribute access to all IRI components, making it easier to work with IRIs without manual parsing:
+    The `I()` (iriref) class now supports direct attribute access to all
+    IRI components, making it easier to work with IRIs without manual parsing:
 
     ```python
     from amara.iri import I
@@ -51,7 +52,7 @@ class iriref(str):
     url.port        # '8080'
     ```
 
-    All attributes are cached after first access for optimal performance. This feature includes comprehensive test coverage with 285+ test cases covering various IRI formats and edge cases.
+    All attributes are cached after first access for optimal performance.
     '''
     def __new__(cls, value):
         if not iri.matches_uri_ref_syntax(value):
