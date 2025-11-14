@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 # amara.uxpath.xast
 
 '''Abstract Syntax Tree for parsed MicroXPath.
@@ -5,7 +8,7 @@
 Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpath/ast.py
 '''
 
-#Q=a; python -c "from amara.uxml import tree; tb = tree.treebuilder(); root = tb.parse('<a><b i=\"1.1\"><x>1</x></b><c i=\"1.2\"><x>2</x><d><x>3</x></d></c><x>4</x><y>5</y></a>'); from amara.uxpath import context, parse as uxpathparse; ctx = context(root); parsed_expr = uxpathparse('$Q'); result = parsed_expr.compute(ctx); print(list(result))"  # noqa: E501
+#Q=a; python -c "from amara.uxml import tree; tb = tree.treebuilder(); root = tb.parse('<a><b i=\"1.1\"><x>1</x></b><c i=\"1.2\"><x>2</x><d><x>3</x></d></c><x>4</x><y>5</y></a>'); from amara.uxpath import context, parse as uxpathparse; ctx = context(root); parsed_expr = uxpathparse('$Q'); result = parsed_expr.compute(ctx); print(list(result))"
 
 __all__ = [
     'root_node',

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 # amara.uxpath
 
 '''
@@ -19,6 +22,8 @@ print(result)
 print(list(result))
 '''
 
+# ruff: noqa: F401,F403
+
 import os
 import re
 import tempfile
@@ -28,7 +33,7 @@ from ply import lex, yacc
 #from amara.iri import iri
 #from amara.uxml import xml
 from amara.uxml import tree
-from amara.uxml.treeutil import *  # noqa: F403
+from amara.uxml.treeutil import *
 from amara.uxml.tree import node as nodetype
 from amara.uxpath import lexrules, parserules, xast
 from amara.uxpath.functions import BUILTIN_FUNCTIONS

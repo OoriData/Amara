@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 # amara.uxpath.parserules
 '''
 XPath parsing rules.
@@ -6,7 +9,7 @@ Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpat
 '''
 
 from amara.uxpath import xast
-from amara.uxpath.lexrules import tokens  # noqa: F401
+from amara.uxpath.lexrules import tokens
 
 precedence = (
     ('left', 'LOGICAL_OP'),

@@ -1,12 +1,16 @@
-########################################################################
-# amara3.uxml.htmliter
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.html5iter
 """
 
 """
 
-from . import tree  # noqa: F401
-from . import treeiter  # noqa: F401
-from .treeutil import *  # noqa: F403
+# ruff: noqa: F401,F403
+
+from . import tree
+from . import treeiter
+from .treeutil import *
 from . import html5
 
 

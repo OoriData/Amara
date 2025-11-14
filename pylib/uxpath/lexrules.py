@@ -1,10 +1,13 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 # amara.uxpath.lexrules
 '''
 Heavy debt to: https://github.com/emory-libraries/eulxml/blob/master/eulxml/xpath/lexrules.py
 
 '''
 
-import re  # noqa: F401
+import re
 from ply.lex import TOKEN
 
 

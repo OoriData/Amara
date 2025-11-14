@@ -1,9 +1,10 @@
-# -----------------------------------------------------------------------------
-# amara3.uxml.coax
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.coax
 #
 # Coroutine API for (Micro)XML
 #  A parser which sends MicroXML events to a coroutine
-# -----------------------------------------------------------------------------
 
 #See also: http://www.w3.org/community/microxml/wiki/MicroLarkApi
 

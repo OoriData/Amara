@@ -1,5 +1,7 @@
-########################################################################
-# amara3.uxml.html5
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.html5
 """
 from amara.uxml import html5
 from amara.uxml.tree import element
@@ -29,6 +31,8 @@ print(next(results).xml_value)
 
 """
 
+# ruff: noqa: F401,F403
+
 __all__ = [
     'node', 'treebuilder', 'comment', 'element',
 ]
@@ -37,9 +41,9 @@ __all__ = [
 # import itertools
 # import weakref
 
-from . import tree  # noqa: F401
-from . import treeiter  # noqa: F401
-from .treeutil import *  # noqa: F403
+from . import tree
+from . import treeiter
+from .treeutil import *
 #from . import xmliter
 
 try:

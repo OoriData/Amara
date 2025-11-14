@@ -1,3 +1,11 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.iri.asynctools
+'''
+Utilities for asynchronous programming
+'''
+
 import sys
 import ssl
 import asyncio

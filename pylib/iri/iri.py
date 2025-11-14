@@ -1,17 +1,20 @@
-"""
+# SPDX-FileCopyrightText: 2008-present Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.iri.iri
+'''
 Classes and functions related to IRI/URI processing, validation, resolution, etc.
-
-Copyright 2008-2020 Uche Ogbuji and Mike Brown
-"""
+Based on work by Uche Ogbuji and Mike Brown (Copyright 2008-2020)
+'''
 
 __all__ = [
   'IriError',
   'I',
 
   # IRI tools
-  "iri_to_uri",
-  "nfc_normalize",
-  "convert_ireg_name",
+  'iri_to_uri',
+  'nfc_normalize',
+  'convert_ireg_name',
 
   # RFC 3986 implementation
   'matches_uri_ref_syntax', 'matches_uri_syntax',
@@ -45,7 +48,7 @@ from uuid import UUID, uuid1, uuid4  # noqa: F401
 
 from .irihelper import I
 
-# whether os_path_to_uri should treat "/" same as "\" in a Windows path
+# whether os_path_to_uri should treat '/' same as '\' in a Windows path
 WINDOWS_SLASH_COMPAT = True
 
 DEFAULT_HIERARCHICAL_SEP = '/'
@@ -53,48 +56,48 @@ DEFAULT_HIERARCHICAL_SEP = '/'
 PERCENT_DECODE_BYTES = ('0123456789%s-._~' % ascii_letters).encode('ascii')
 
 class IriError(Exception):
-    """
+    '''
     Exception related to URI/IRI processing
-    """
+    '''
     pass
     #FIXME: Re-incorporate the exception details below
 '''
         return {
             IriError.INVALID_BASE_URI: _(
-                "Invalid base URI: %(base)r cannot be used to resolve "
-                " reference %(ref)r"),
+                'Invalid base URI: %(base)r cannot be used to resolve '
+                ' reference %(ref)r'),
             IriError.RELATIVE_BASE_URI: _(
-                "Invalid base URI: %(base)r cannot be used to resolve "
-                "reference %(ref)r; the base URI must be absolute, not "
-                "relative."),
+                'Invalid base URI: %(base)r cannot be used to resolve '
+                'reference %(ref)r; the base URI must be absolute, not '
+                'relative.'),
             IriError.NON_FILE_URI: _(
-                "Only a 'file' URI can be converted to an OS-specific path; "
-                "URI given was %(uri)r"),
+                'Only a 'file' URI can be converted to an OS-specific path; '
+                'URI given was %(uri)r'),
             IriError.UNIX_REMOTE_HOST_FILE_URI: _(
-                "A URI containing a remote host name cannot be converted to a "
-                " path on posix; URI given was %(uri)r"),
+                'A URI containing a remote host name cannot be converted to a '
+                ' path on posix; URI given was %(uri)r'),
             IriError.RESOURCE_ERROR: _(
-                "Error retrieving resource %(loc)r: %(msg)s"),
+                'Error retrieving resource %(loc)r: %(msg)s'),
             IriError.UNSUPPORTED_PLATFORM: _(
-                "Platform %(platform)r not supported by URI function "
-                "%(function)s"),
+                'Platform %(platform)r not supported by URI function '
+                '%(function)s'),
             IriError.SCHEME_REQUIRED: _(
-                "Scheme-based resolution requires a URI with a scheme; "
-                "neither the base URI %(base)r nor the reference %(ref)r "
-                "have one."),
+                'Scheme-based resolution requires a URI with a scheme; '
+                'neither the base URI %(base)r nor the reference %(ref)r '
+                'have one.'),
             IriError.INVALID_PUBLIC_ID_URN: _(
-                "A public ID cannot be derived from URN %(urn)r "
-                "because it does not conform to RFC 3151."),
+                'A public ID cannot be derived from URN %(urn)r '
+                'because it does not conform to RFC 3151.'),
             IriError.UNSUPPORTED_SCHEME: _(
-                "The URI scheme %(scheme)s is not supported by resolver "),
+                'The URI scheme %(scheme)s is not supported by resolver '),
             IriError.DENIED_BY_RULE: _(
-                "Access to IRI %(uri)r was denied by action of an IRI restriction"),
+                'Access to IRI %(uri)r was denied by action of an IRI restriction'),
             }
 '''
 
 
 def iri_to_uri(iri, convertHost=False):
-    r"""
+    r'''
     Converts an IRI or IRI reference to a URI or URI reference,
     implementing sec. 3.1 of draft-duerst-iri-10.
 
@@ -110,7 +113,7 @@ def iri_to_uri(iri, convertHost=False):
     is instead given as a byte string, then it will be assumed to be
     UTF-8 encoded, will be decoded accordingly, and as per the
     requirements of the conversion algorithm, will NOT be normalized.
-    """
+    '''
     if not isinstance(iri, str):
         iri = nfc_normalize(iri)
 
@@ -145,7 +148,7 @@ def iri_to_uri(iri, convertHost=False):
         if cp > 128:
             if cp < 160:
                 # FIXME: i18n
-                raise ValueError(_("Illegal character at position %d (0-based) of IRI %r" % (pos, iri)))  # noqa: F821
+                raise ValueError(_('Illegal character at position %d (0-based) of IRI %r' % (pos, iri)))  # noqa: F821
             # 'for c in iri' may give us surrogate pairs
             elif cp > 55295:
                 if cp < 56320:
@@ -155,10 +158,10 @@ def iri_to_uri(iri, convertHost=False):
                 elif cp < 57344:
                     # dc00-dfff
                     if surrogate is None:
-                        raise ValueError(_("Illegal surrogate pair in %r" % iri))  # noqa: F821
+                        raise ValueError(_('Illegal surrogate pair in %r' % iri))  # noqa: F821
                     c = surrogate + c
                 else:
-                    raise ValueError(_("Illegal surrogate pair in %r" % iri))  # noqa: F821
+                    raise ValueError(_('Illegal surrogate pair in %r' % iri))  # noqa: F821
                 surrogate = None
             for octet in c.encode('utf-8'):
                 res += '%%%02X' % ord(octet)
@@ -169,19 +172,19 @@ def iri_to_uri(iri, convertHost=False):
 
 
 def nfc_normalize(iri):
-    """
+    '''
     Normalizes the given unicode string according to Unicode Normalization Form C (NFC)
     so that it can be used as an IRI or IRI reference.
-    """
+    '''
     from unicodedata import normalize
     return normalize('NFC', iri)
 
 
 def convert_ireg_name(iregname):
-    """
+    '''
     Converts the given ireg-name component of an IRI to a string suitable for use
     as a URI reg-name in pre-rfc2396bis schemes and resolvers. Returns the ireg-name
-    """
+    '''
     # I have not yet verified that the default IDNA encoding
     # matches the algorithm required by the IRI spec, but it
     # does work on the one simple example in the spec.
@@ -193,11 +196,11 @@ def convert_ireg_name(iregname):
 #
 _validation_setup_completed = False
 def _init_uri_validation_regex():
-    """
+    '''
     Called internally to compile the regular expressions needed by
     URI validation functions, just once, the first time a function
     that needs them is called.
-    """
+    '''
     global _validation_setup_completed
     if _validation_setup_completed:
         return
@@ -213,9 +216,9 @@ def _init_uri_validation_regex():
     # 1. Altova's regex (in the public domain; courtesy Altova)
     #
     # # based on the BNF grammar in the original RFC 2396
-    # ALTOVA_REGEX = r"(([a-zA-Z][0-9a-zA-Z+\-\.]*:)?/{0,2}" + \
-    #                r"[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?" + \
-    #                r"(#[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?"
+    # ALTOVA_REGEX = r'(([a-zA-Z][0-9a-zA-Z+\-\.]*:)?/{0,2}' + \
+    #                r'[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?' + \
+    #                r'(#[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?'
     #
     # This regex matches URI references, and thus URIs as well. It is also
     # lenient; some strings that are not URI references can falsely match.
@@ -227,7 +230,7 @@ def _init_uri_validation_regex():
     # an entire string. This is accomplished in Python by using the \A and \Z
     # delimiters around the pattern:
     #
-    # BETTER_ALTOVA_REGEX = r"\A(?!\n)%s\Z" % ALTOVA_REGEX
+    # BETTER_ALTOVA_REGEX = r'\A(?!\n)%s\Z' % ALTOVA_REGEX
     #
     # The (?!\n) takes care of an edge case where a string consisting of a
     # sole linefeed character would falsely match.
@@ -239,22 +242,22 @@ def _init_uri_validation_regex():
     # potentially locale or Unicode sensitive.
     #
     # # based on the ABNF in RFC 3986,
-    # # "Uniform Resource Identifier (URI): Generic Syntax"
-    pchar           = r"(?:[0-9A-Za-z\-_\.!~*'();:@&=+$,]|(?:%[0-9A-Fa-f]{2}))"
-    fragment        = r"(?:[0-9A-Za-z\-_\.!~*();:@&=+$,/?]|(?:%[0-9A-Fa-f]{2}))*"
+    # # 'Uniform Resource Identifier (URI): Generic Syntax'
+    pchar           = r'(?:[0-9A-Za-z\-_\.!~*\'();:@&=+$,]|(?:%[0-9A-Fa-f]{2}))'
+    fragment        = r'(?:[0-9A-Za-z\-_\.!~*();:@&=+$,/?]|(?:%[0-9A-Fa-f]{2}))*'
     query           = fragment
-    segment_nz_nc   = r"(?:[0-9A-Za-z\-_\.!~*'();@&=+$,]|(?:%[0-9A-Fa-f]{2}))+"
+    segment_nz_nc   = r'(?:[0-9A-Za-z\-_\.!~*\'();@&=+$,]|(?:%[0-9A-Fa-f]{2}))+'
     segment_nz      = r'%s+' % pchar
     segment         = r'%s*' % pchar
     #path_empty      = r''  # zero characters
     path_rootless   = r'%s(?:/%s)*' % (segment_nz, segment)   # begins with a segment
     path_noscheme   = r'%s(?:/%s)*' % (segment_nz_nc, segment)  # begins with a non-colon segment
-    path_absolute   = r'/(?:%s)?' % path_rootless  # begins with "/" but not "//"
-    path_abempty    = r'(?:/%s)*' % segment   # begins with "/" or is empty
+    path_absolute   = r'/(?:%s)?' % path_rootless  # begins with '/' but not '//'
+    path_abempty    = r'(?:/%s)*' % segment   # begins with '/' or is empty
     #path            = r'(?:(?:%s)|(?:%s)|(?:%s)|(?:%s))?' % (path_abempty, path_absolute, path_noscheme, path_rootless)
     domainlabel     = r'[0-9A-Za-z](?:[0-9A-Za-z\-]{0,61}[0-9A-Za-z])?'
     qualified       = r'(?:\.%s)*\.?' % domainlabel  # noqa: F841
-    reg_name        = r"(?:(?:[0-9A-Za-z\-_\.!~*'();&=+$,]|(?:%[0-9A-Fa-f]{2}))*)"
+    reg_name        = r'(?:(?:[0-9A-Za-z\-_\.!~*\'();&=+$,]|(?:%[0-9A-Fa-f]{2}))*)'
     dec_octet       = r'(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
     IPv4address     = r'(?:%s\.){3}(?:%s)' % (dec_octet, dec_octet)
     h16             = r'[0-9A-Fa-f]{1,4}'
@@ -270,11 +273,11 @@ def _init_uri_validation_regex():
                       r'|(?:(?:(?:%s:)?%s){0,5}::%s)' % (h16, h16, h16) + \
                       r'|(?:(?:(?:%s:)?%s){0,6}::)' % (h16, h16) + \
                       r')'
-    IPvFuture       = r"(?:v[0-9A-Fa-f]+\.[0-9A-Za-z\-\._~!$&'()*+,;=:]+)"
+    IPvFuture       = r'(?:v[0-9A-Fa-f]+\.[0-9A-Za-z\-\._~!$&\'()*+,;=:]+)'
     IP_literal      = r'\[(?:%s|%s)\]' % (IPv6address, IPvFuture)
     port            = r'[0-9]*'
     host            = r'(?:%s|%s|%s)?' % (IP_literal, IPv4address, reg_name)
-    userinfo        = r"(?:[0-9A-Za-z\-_\.!~*'();:@&=+$,]|(?:%[0-9A-Fa-f]{2}))*"
+    userinfo        = r'(?:[0-9A-Za-z\-_\.!~*\'();:@&=+$,]|(?:%[0-9A-Fa-f]{2}))*'
     authority       = r'(?:%s@)?%s(?::%s)?' % (userinfo, host, port)
     scheme          = r'[A-Za-z][0-9A-Za-z+\-\.]*'
     #absolute_URI    = r'%s:%s(?:\?%s)?' % (scheme, hier_part, query)
@@ -286,8 +289,8 @@ def _init_uri_validation_regex():
     URI             = r'%s:%s(?:\?%s)?(?:#%s)?' % (scheme, hier_part, query, fragment)
     URI_reference   = r'(?:%s|%s)' % (URI, relative_ref)
 
-    STRICT_URI_PYREGEX = r"\A%s\Z" % URI
-    STRICT_URIREF_PYREGEX = r"\A(?!\n)%s\Z" % URI_reference
+    STRICT_URI_PYREGEX = r'\A%s\Z' % URI
+    STRICT_URIREF_PYREGEX = r'\A(?!\n)%s\Z' % URI_reference
 
     global URI_PATTERN, URI_REF_PATTERN
     URI_PATTERN = re.compile(STRICT_URI_PYREGEX)        # strict checking for URIs
@@ -297,26 +300,26 @@ def _init_uri_validation_regex():
 
 
 def matches_uri_ref_syntax(s):
-    """
+    '''
     This function returns true if the given string could be a URI reference,
     as defined in RFC 3986, just based on the string's syntax.
 
     A URI reference can be a URI or certain portions of one, including the
     empty string, and it can have a fragment component.
-    """
+    '''
     if not _validation_setup_completed:
         _init_uri_validation_regex()
     return URI_REF_PATTERN.match(s) is not None
 
 
 def matches_uri_syntax(s):
-    """
+    '''
     This function returns true if the given string could be a URI, as defined
     in RFC 3986, just based on the string's syntax.
 
     A URI is by definition absolute (begins with a scheme) and does not end
     with a #fragment. It also must adhere to various other syntax rules.
-    """
+    '''
     if not _validation_setup_completed:
         _init_uri_validation_regex()
     return URI_PATTERN.match(s) is not None
@@ -324,10 +327,10 @@ def matches_uri_syntax(s):
 
 _split_uri_ref_setup_completed = False
 def _init_split_uri_ref_pattern():
-    """
+    '''
     Called internally to compile the regular expression used by
     split_uri_ref() just once, the first time the function is called.
-    """
+    '''
     global _split_uri_ref_setup_completed
     if _split_uri_ref_setup_completed:
         return
@@ -336,7 +339,7 @@ def _init_split_uri_ref_pattern():
     # It is based on this one, from RFC 3986 appendix B
     # (unchanged from RFC 2396 appendix B):
     # ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
-    regex = r"^(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?$"
+    regex = r'^(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?$'
     global SPLIT_URI_REF_PATTERN
     SPLIT_URI_REF_PATTERN = re.compile(regex)
     _split_uri_ref_setup_completed = True
@@ -344,7 +347,7 @@ def _init_split_uri_ref_pattern():
 
 
 def split_uri_ref(iri_ref):
-    """
+    '''
     Given a valid URI reference as a string, returns a tuple representing the
     generic URI components, as per RFC 3986 appendix B. The tuple's structure
     is (scheme, authority, path, query, fragment).
@@ -352,8 +355,8 @@ def split_uri_ref(iri_ref):
     All values will be strings (possibly empty) or None if undefined.
 
     Note that per RFC 3986, there is no distinction between a path and
-    an "opaque part", as there was in RFC 2396.
-    """
+    an 'opaque part', as there was in RFC 2396.
+    '''
     if not _split_uri_ref_setup_completed:
         _init_split_uri_ref_pattern()
     # the pattern will match every possible string, so it's safe to
@@ -368,12 +371,12 @@ def split_uri_ref(iri_ref):
 
 
 def unsplit_uri_ref(iri_refSeq):
-    """
+    '''
     Given a sequence as would be produced by split_uri_ref(), assembles and
     returns a URI reference as a string.
-    """
+    '''
     if not isinstance(iri_refSeq, (tuple, list)):
-        raise TypeError(_("sequence expected, got %s" % type(iri_refSeq)))  # noqa: F821
+        raise TypeError(_('sequence expected, got %s' % type(iri_refSeq)))  # noqa: F821
     (scheme, authority, path, query, fragment) = iri_refSeq
     uri = ''
     if scheme is not None:
@@ -390,10 +393,10 @@ def unsplit_uri_ref(iri_refSeq):
 
 _split_authority_setup_completed = False
 def _init_split_authority_pattern():
-    """
+    '''
     Called internally to compile the regular expression used by
     split_authority() just once, the first time the function is called.
-    """
+    '''
     global _split_authority_setup_completed
     if _split_authority_setup_completed:
         return
@@ -405,11 +408,11 @@ def _init_split_authority_pattern():
 
 
 def split_authority(authority):
-    """
+    '''
     Given a string representing the authority component of a URI, returns
     a tuple consisting of the subcomponents (userinfo, host, port). No
     percent-decoding is performed.
-    """
+    '''
     if not _split_authority_setup_completed:
         _init_split_authority_pattern()
     m = SPLIT_AUTHORITY_PATTERN.match(authority)
@@ -420,11 +423,11 @@ def split_authority(authority):
 
 
 def split_fragment(uri):
-    """
+    '''
     Given a URI or URI reference, returns a tuple consisting of
     (base, fragment), where base is the portion before the '#' that
     precedes the fragment component.
-    """
+    '''
     # The only '#' in a legit URI will be the fragment separator,
     # but in the wild, people get sloppy. Assume the last '#' is it.
     pos = uri.rfind('#')
@@ -434,36 +437,36 @@ def split_fragment(uri):
         return (uri[:pos], uri[pos+1:])
 
 
-# "unreserved" characters are allowed in a URI, and do not have special
+# 'unreserved' characters are allowed in a URI, and do not have special
 # meaning as delimiters of URI components or subcomponents. They may
 # appear raw or percent-encoded, but percent-encoding is discouraged.
 # This set of characters is sufficiently long enough that using a
-# compiled regex is faster than using a string with the "in" operator.
-#UNRESERVED_PATTERN = re.compile(r"[0-9A-Za-z\-\._~!*'()]") # RFC 2396
+# compiled regex is faster than using a string with the 'in' operator.
+#UNRESERVED_PATTERN = re.compile(r'[0-9A-Za-z\-\._~!*'()]') # RFC 2396
 UNRESERVED_PATTERN = re.compile(r'[0-9A-Za-z\-\._~]') # RFC 3986
 
-# "reserved" characters are allowed in a URI, but they may or always do
+# 'reserved' characters are allowed in a URI, but they may or always do
 # have special meaning as delimiters of URI components or subcomponents.
 # When being used as delimiters, they must be raw, and when not being
 # used as delimiters, they must be percent-encoded.
 # This set of characters is sufficiently short enough that using a
-# string with the "in" operator is faster than using a compiled regex.
+# string with the 'in' operator is faster than using a compiled regex.
 # The characters in the string are ordered according to how likely they
-# are to be found (approximately), for faster operation with "in".
-#RESERVED = "/&=+?;@,:$[]" # RFC 2396 + RFC 2732
-RESERVED = "/=&+?#;@,:$!*[]()'" # RFC 3986
+# are to be found (approximately), for faster operation with 'in'.
+#RESERVED = '/&=+?;@,:$[]' # RFC 2396 + RFC 2732
+RESERVED = '/=&+?#;@,:$!*[]()\'' # RFC 3986
 
 
 def percent_encode(s, encoding='utf-8', encodeReserved=True, spaceToPlus=False,
                      nlChars=None, reservedChars=RESERVED):
-    """
+    '''
     [*** Experimental API ***] This function applies percent-encoding, as
     described in RFC 3986 sec. 2.1, to the given string, in order to prepare
     the string for use in a URI. It replaces characters that are not allowed
     in a URI. By default, it also replaces characters in the reserved set,
-    which normally includes the generic URI component delimiters ":" "/"
-    "?" \"#\" "[" "]" "@" and the subcomponent delimiters "!" "$" "&" "\'" "("
-    ")" "*" "+" "," ";" "=".
+    which normally includes the generic URI component delimiters ':' '/'
+    '?' \'#\' '[' ']' '@' and the subcomponent delimiters '!' '$' '&' '\'' '('
+    ')' '*' '+' ',' ';' '='.
 
     Ideally, this function should be used on individual components or
     subcomponents of a URI prior to assembly of the complete URI, not
@@ -483,14 +486,14 @@ def percent_encode(s, encoding='utf-8', encodeReserved=True, spaceToPlus=False,
     identified by the encoding argument must return a byte string.
 
     The spaceToPlus flag controls whether space characters are changed to
-    "+" characters in the result, rather than being percent-encoded.
-    Generally, this is not required, and given the status of "+" as a
+    '+' characters in the result, rather than being percent-encoded.
+    Generally, this is not required, and given the status of '+' as a
     reserved character, is often undesirable. But it is required in certain
     situations, such as when generating application/x-www-form-urlencoded
     content or RFC 3151 public identifier URNs, so it is supported here.
 
     The nlChars argument, if given, is a sequence type in which each member
-    is a substring that indicates a "new line". Occurrences of this substring
+    is a substring that indicates a 'new line'. Occurrences of this substring
     will be replaced by '%0D%0A' in the result, as is required when generating
     application/x-www-form-urlencoded content.
 
@@ -500,7 +503,7 @@ def percent_encode(s, encoding='utf-8', encodeReserved=True, spaceToPlus=False,
     >>> from amara.iri import iri
     >>> iri.percent_encode('http://bibfra.me/vocab/relation/論定')
     http%3A%2F%2Fbibfra.me%2Fvocab%2Frelation%2F%E8%AB%96%E5%AE%9A
-    """
+    '''
     res = ''
     if nlChars is not None:
         for c in nlChars:
@@ -544,7 +547,7 @@ _HEXTOBYTE = None
 
 
 def _unquote_to_bytes(s, decodable=None):
-    """_unquote_to_bytes('abc%20def') -> b'abc def'."""
+    '''_unquote_to_bytes('abc%20def') -> b'abc def'.'''
     # Note: strings are encoded as UTF-8. This is only an issue if it contains
     # unescaped non-ASCII characters, which URIs should not.
     if not s:
@@ -588,7 +591,7 @@ def _unquote_to_bytes(s, decodable=None):
 
 
 def percent_decode(s, encoding='utf-8', decodable=None, errors='replace'):
-    """
+    '''
     [*** Experimental API ***] Reverses the percent-encoding of the given
     string.
 
@@ -612,7 +615,7 @@ def percent_decode(s, encoding='utf-8', decodable=None, errors='replace'):
     >>> u1 = percent_decode(u0)
     >>> hex(ord(u1[15]))
     '0x2022'
-    """
+    '''
     # Most of this comes from urllib.parse.unquote().
     # Note: strings are encoded as UTF-8. This is only an issue if it contains
     # unescaped non-ASCII characters, which URIs should not.
@@ -636,7 +639,7 @@ def percent_decode(s, encoding='utf-8', decodable=None, errors='replace'):
 
 
 def absolutize(iri_ref, base_iri, limit_schemes=None):
-    """
+    '''
     Resolves a IRI reference to absolute form, effecting the result of RFC
     3986 section 5. The IRI reference is considered to be relative to the
     given base IRI.
@@ -658,12 +661,12 @@ def absolutize(iri_ref, base_iri, limit_schemes=None):
     meeting the criteria to be usable as a base URI.
 
     It is the caller's responsibility to make a determination of whether the
-    URI reference constitutes a "same-document reference", as defined in RFC
+    URI reference constitutes a 'same-document reference', as defined in RFC
     2396 or RFC 3986. As per the spec, dereferencing a same-document
-    reference "should not" involve retrieval of a new representation of the
+    reference 'should not' involve retrieval of a new representation of the
     referenced resource. Note that the two specs have different definitions
     of same-document reference: RFC 2396 says it is *only* the cases where the
-    reference is the empty string, or \"#\" followed by a fragment; RFC 3986
+    reference is the empty string, or \'#\' followed by a fragment; RFC 3986
     requires making a comparison of the base URI to the absolute form of the
     reference (as is returned by the spec), minus its fragment component,
     if any.
@@ -676,7 +679,7 @@ def absolutize(iri_ref, base_iri, limit_schemes=None):
     same-document references and 'file:' URIs, both being situations that
     come up far too often to consider the functions reliable enough for
     general use.
-    """
+    '''
     # Reasons to avoid using urllib.basejoin() and urlparse.urljoin():
     # - Both are partial implementations of long-obsolete specs.
     # - Both accept relative URLs as the base, which no spec allows.
@@ -698,12 +701,12 @@ def absolutize(iri_ref, base_iri, limit_schemes=None):
     if not base_iri or is_absolute(iri_ref):
         return iri_ref
     if not base_iri or not is_absolute(base_iri):
-        raise ValueError("Invalid base URI: {base} cannot be used to resolve "
-                "reference {ref}; the base URI must be absolute, not "
-                "relative.".format(base=base_iri, ref=iri_ref))
+        raise ValueError('Invalid base URI: {base} cannot be used to resolve '
+                'reference {ref}; the base URI must be absolute, not '
+                'relative.'.format(base=base_iri, ref=iri_ref))
     if limit_schemes and get_scheme(base_iri) not in limit_schemes:
         scheme = get_scheme(base_iri)
-        raise ValueError("The URI scheme {scheme} is not supported by resolver".format(scheme=scheme))
+        raise ValueError('The URI scheme {scheme} is not supported by resolver'.format(scheme=scheme))
 
     # shortcut for the simplest same-document reference cases
     if iri_ref == '' or iri_ref[0] == '#':
@@ -762,7 +765,7 @@ def absolutize(iri_ref, base_iri, limit_schemes=None):
 
 
 def relativize(targetUri, againstUri, subPathOnly=False):
-    """
+    '''
     This method returns a relative URI that is consistent with `targetURI`
     when resolved against `againstUri`.  If no such relative URI exists, for
     whatever reason, this method returns `None`.
@@ -782,10 +785,10 @@ def relativize(targetUri, againstUri, subPathOnly=False):
     reference if such a reference exists relative to the last hierarchical
     segment of `againstUri`.  In particular, this relative reference will
     not start with '/' or '../'.
-    """
+    '''
 
     # We might want to change the semantics slightly to allow a relative
-    # target URI to be a valid "relative path" (and just return it).  For
+    # target URI to be a valid 'relative path' (and just return it).  For
     # now, though, absolute URIs only.
     if not is_absolute(targetUri) or not is_absolute(againstUri):
         return None
@@ -861,14 +864,14 @@ def relativize(targetUri, againstUri, subPathOnly=False):
     elif traverse > 0:
         if subPathOnly:
             return None
-        relativePath = (("../" * traverse) +
+        relativePath = (('../' * traverse) +
                         '/'.join(targetPathSegments[i:]))
     # If the ith segment of the target path is empty and that is not the
-    # final segment, then we need to precede the path with "./" to make it a
+    # final segment, then we need to precede the path with './' to make it a
     # relative path.
     elif (len(targetPathSegments) > i + 1 and
           '' == targetPathSegments[i]):
-        relativePath = "./" + '/'.join(targetPathSegments[i:])
+        relativePath = './' + '/'.join(targetPathSegments[i:])
     else:
         relativePath = '/'.join(targetPathSegments[i:])
 
@@ -876,18 +879,18 @@ def relativize(targetUri, againstUri, subPathOnly=False):
 
 
 def remove_dot_segments(path):
-    """
+    '''
     Supports absolutize() by implementing the remove_dot_segments function
     described in RFC 3986 sec. 5.2.  It collapses most of the '.' and '..'
     segments out of a path without eliminating empty segments. It is intended
     to be used during the path merging process and may not give expected
     results when used independently. Use normalize_path_segments() or
     normalize_path_segments_in_uri() if more general normalization is desired.
-    """
-    # return empty string if entire path is just "." or ".."
+    '''
+    # return empty string if entire path is just '.' or '..'
     if path == '.' or path == '..':
         return path[0:0] # preserves string type
-    # remove all "./" or "../" segments at the beginning
+    # remove all './' or '../' segments at the beginning
     while path:
         if path[:2] == './':
             path = path[2:]
@@ -903,7 +906,7 @@ def remove_dot_segments(path):
     if path[:1] == '/':
         path = path[1:]
         leading_slash = True
-    # replace a trailing "/." with just "/"
+    # replace a trailing '/.' with just '/'
     if path[-2:] == '/.':
         path = path[:-1]
     # convert the segments into a list and process each segment in
@@ -932,7 +935,7 @@ def remove_dot_segments(path):
 
 
 def normalize_case(iri_ref, doHost=False):
-    """
+    '''
     Returns the given URI reference with the case of the scheme,
     percent-encoded octets, and, optionally, the host, all normalized,
     implementing section 6.2.2.1 of RFC 3986. The normal form of
@@ -942,7 +945,7 @@ def normalize_case(iri_ref, doHost=False):
     The URI reference can be given as either a string or as a sequence as
     would be provided by the split_uri_ref function. The return value will
     be a string or tuple.
-    """
+    '''
     if not isinstance(iri_ref, (tuple, list)):
         iri_ref = split_uri_ref(iri_ref)
         tup = None
@@ -980,7 +983,7 @@ def normalize_case(iri_ref, doHost=False):
 
 
 def normalize_percent_encoding(s):
-    """
+    '''
     Given a string representing a URI reference or a component thereof,
     returns the string with all percent-encoded octets that correspond to
     unreserved characters decoded, implementing section 6.2.2.2 of RFC
@@ -990,17 +993,17 @@ def normalize_percent_encoding(s):
     >>> u1 = normalize_percent_encoding(u0)
     >>> hex(ord(u1[15]))
     '0x2022'
-    """
+    '''
     return percent_decode(s, decodable=PERCENT_DECODE_BYTES)
 
 
 def normalize_path_segments(path):
-    """
+    '''
     Given a string representing the path component of a URI reference having a
     hierarchical scheme, returns the string with dot segments ('.' and '..')
     removed, implementing section 6.2.2.3 of RFC 3986. If the path is
     relative, it is returned with no changes.
-    """
+    '''
     if not path or path[:1] != '/':
         return path
     else:
@@ -1008,12 +1011,12 @@ def normalize_path_segments(path):
 
 
 def normalize_path_segments_in_uri(uri):
-    """
+    '''
     Given a string representing a URI or URI reference having a hierarchical
     scheme, returns the string with dot segments ('.' and '..') removed from
     the path component, implementing section 6.2.2.3 of RFC 3986. If the
     path is relative, the URI or URI reference is returned with no changes.
-    """
+    '''
     components = list(split_uri_ref(uri))
     components[2] = normalize_path_segments(components[2])
     return unsplit_uri_ref(components)
@@ -1024,17 +1027,17 @@ def normalize_path_segments_in_uri(uri):
 #
 
 def urn_to_public_id(urn):
-    """
+    '''
     Converts a URN that conforms to RFC 3151 to a public identifier.
 
     For example, the URN
-    "urn:publicid:%2B:IDN+example.org:DTD+XML+Bookmarks+1.0:EN:XML"
+    'urn:publicid:%2B:IDN+example.org:DTD+XML+Bookmarks+1.0:EN:XML'
     will be converted to the public identifier
-    "+//IDN example.org//DTD XML Bookmarks 1.0//EN//XML"
+    '+//IDN example.org//DTD XML Bookmarks 1.0//EN//XML'
 
     Raises a ValueError if the given URN cannot be converted.
     Query and fragment components, if present, are ignored.
-    """
+    '''
     if urn is not None and urn:
         (scheme, auth, path, query, frag) = split_uri_ref(urn)
         if scheme is not None and scheme.lower() == 'urn':
@@ -1048,14 +1051,14 @@ def urn_to_public_id(urn):
                     publicid = percent_decode(publicid)
                     return publicid
 
-    raise ValueError("A public ID cannot be derived from URN {urn} "
-                "because it does not conform to RFC 3151.".format(urn=urn))
+    raise ValueError('A public ID cannot be derived from URN {urn} '
+                'because it does not conform to RFC 3151.'.format(urn=urn))
 
 
 def public_id_to_urn(publicid):
-    """
+    '''
     Converts a public identifier to a URN that conforms to RFC 3151.
-    """
+    '''
     # 1. condense whitespace, XSLT-style
     publicid = re.sub('[ \t\r\n]+', ' ', publicid.strip())
     # 2. // -> :
@@ -1076,10 +1079,10 @@ def public_id_to_urn(publicid):
 
 SCHEME_PATTERN = re.compile(r'([a-zA-Z][a-zA-Z0-9+\-.]*):')
 def get_scheme(iri_ref):
-    """
+    '''
     Obtains, with optimum efficiency, just the scheme from a URI reference.
     Returns a string, or if no scheme could be found, returns None.
-    """
+    '''
     # Using a regex seems to be the best option. Called 50,000 times on
     # different URIs, on a 1.0-GHz PIII with FreeBSD 4.7 and Python
     # 2.2.1, this method completed in 0.95s, and 0.05s if there was no
@@ -1095,29 +1098,29 @@ def get_scheme(iri_ref):
 
 
 def strip_fragment(iri_ref):
-    """
+    '''
     Returns the given URI or URI reference with the fragment component, if
     any, removed.
-    """
+    '''
     return split_fragment(iri_ref)[0]
 
 
 def is_absolute(identifier):
-    """
+    '''
     Given a string believed to be a URI or URI reference, tests that it is
     absolute (as per RFC 3986), not relative -- i.e., that it has a scheme.
-    """
+    '''
     # We do it this way to avoid compiling another massive regex.
     return get_scheme(identifier) is not None
 
 
 _ntPathToUriSetupCompleted = False
 def _initNtPathPattern():
-    """
+    '''
     Called internally to compile the regular expression used by
     os_path_to_uri() on Windows just once, the first time the function is
     called.
-    """
+    '''
     global _ntPathToUriSetupCompleted
     if _ntPathToUriSetupCompleted:
         return
@@ -1150,13 +1153,13 @@ def _initNtPathPattern():
     #  is ignored, but the question is do we put it in the URI?
     #
     # So the format, in ABNF, is roughly:
-    # [ drive ":" ] ( [ "\\" host "\" share ] abs-path ) / rel-path
+    # [ drive ':' ] ( [ '\\' host '\' share ] abs-path ) / rel-path
     drive         = r'(?P<drive>[A-Za-z])'
     host          = r'(?P<host>[^\\]*)'
     share         = r'(?P<share>[^\\]+)'
     abs_path      = r'(?P<abspath>\\(?:[^\\]+\\?)*)'
     rel_path      = r'(?P<relpath>(?:[^\\]+\\?)*)'
-    NT_PATH_REGEX = r"^(?:%s:)?(?:(?:(?:\\\\%s\\%s)?%s)|%s)$" % (
+    NT_PATH_REGEX = r'^(?:%s:)?(?:(?:(?:\\\\%s\\%s)?%s)|%s)$' % (
                         drive,
                         host,
                         share,
@@ -1167,7 +1170,7 @@ def _initNtPathPattern():
     # We can now use NT_PATH_PATTERN.match(path) to parse the path and use
     #  the returned object's .groupdict() method to get a dictionary of
     #  path subcomponents. For example,
-    #  NT_PATH_PATTERN.match(r"\\h\$c$\x\y\z").groupdict()
+    #  NT_PATH_PATTERN.match(r'\\h\$c$\x\y\z').groupdict()
     #  yields
     #  {'abspath': r'\x\y\z',
     #   'share': '$c$',
@@ -1182,15 +1185,15 @@ def _initNtPathPattern():
 
 
 def _splitNtPath(path):
-    """
+    '''
     Called internally to get a tuple representing components of the given
     Windows path.
-    """
+    '''
     if not _ntPathToUriSetupCompleted:
         _initNtPathPattern()
     m = NT_PATH_PATTERN.match(path)
     if not m:
-        raise ValueError("Path {path} is not a valid Windows path.".format(path=path))
+        raise ValueError('Path {path} is not a valid Windows path.'.format(path=path))
     components = m.groupdict()
     (drive, host, share, abspath, relpath) = (
         components['drive'],
@@ -1203,17 +1206,17 @@ def _splitNtPath(path):
 
 
 def _get_drive_letter(s):
-    """
+    '''
     Called internally to get a drive letter from a string, if the string
     is a drivespec.
-    """
+    '''
     if len(s) == 2 and s[1] in ':|' and s[0] in ascii_letters:
         return s[0]
     return
 
 
 def os_path_to_uri(path, attemptAbsolute=True, osname=None):
-    r"""This function converts an OS-specific file system path to a URI of
+    r'''This function converts an OS-specific file system path to a URI of
     the form 'file:///path/to/the/file'.
 
     In addition, if the path is absolute, any dot segments ('.' or '..') will
@@ -1244,7 +1247,7 @@ def os_path_to_uri(path, attemptAbsolute=True, osname=None):
 
     This function is similar to urllib.pathname2url(), but is more featureful
     and produces better URIs.
-    """
+    '''
     # Problems with urllib.pathname2url() on all platforms include:
     # - the generated URL has no scheme component;
     # - percent-encoding is incorrect, due to urllib.quote() issues.
@@ -1257,20 +1260,20 @@ def os_path_to_uri(path, attemptAbsolute=True, osname=None):
     #    hostname component of the resulting URL);
     # - non-leading, consecutive backslashes are collapsed, which may
     #    be desirable but is correcting what is, arguably, user error;
-    # - the presence of a letter followed by ":" is believed to
+    # - the presence of a letter followed by ':' is believed to
     #    indicate a drivespec, no matter where it occurs in the path,
     #    which may have been considered a safe assumption since the
-    #    drivespec is the only place where ":" can legally, but there's
+    #    drivespec is the only place where ':' can legally, but there's
     #    no need to search the whole string for it;
-    # - the ":" in a drivespec is converted to "|", a convention that
+    # - the ':' in a drivespec is converted to '|', a convention that
     #    is becoming increasingly less common. For compatibility, most
-    #    web browser resolvers will accept either "|" or ":" in a URL,
-    #    but urllib.urlopen(), relying on url2pathname(), expects "|"
+    #    web browser resolvers will accept either '|' or ':' in a URL,
+    #    but urllib.urlopen(), relying on url2pathname(), expects '|'
     #    only. In our opinion, the callers of those functions should
     #    ensure that the arguments are what are expected. Our goal
     #    here is to produce a quality URL, not a URL designed to play
     #    nice with urllib's bugs & limitations.
-    # - it treats "/" the same as "\", which results in being able to
+    # - it treats '/' the same as '\', which results in being able to
     #    call the function with a posix-style path, a convenience
     #    which allows the caller to get sloppy about whether they are
     #    really passing a path that is apprropriate for the desired OS.
@@ -1278,10 +1281,10 @@ def os_path_to_uri(path, attemptAbsolute=True, osname=None):
     #
     # There is some disagreement over whether a drivespec should be placed in
     # the authority or in the path. Placing it in the authority means that
-    # ":", which has a reserved purpose in the authority, cannot be used --
+    # ':', which has a reserved purpose in the authority, cannot be used --
     # this, along with the fact that prior to RFC 3986, percent-encoded
-    # octets were disallowed in the authority, is presumably a reason why "|"
-    # is a popular substitute for ":". Using the authority also allows for
+    # octets were disallowed in the authority, is presumably a reason why '|'
+    # is a popular substitute for ':'. Using the authority also allows for
     # the drive letter to be retained whe resolving references like this:
     #   reference '/a/b/c' + base 'file://C|/x/y/z' = 'file://C|/a/b/c'
     # The question is, is that really the ideal result? Should the drive info
@@ -1346,15 +1349,15 @@ def os_path_to_uri(path, attemptAbsolute=True, osname=None):
                 module = '%surl2path' % osname
                 exec('from %s import pathname2url' % module, globals(), locals())
             except ImportError:
-                raise RuntimeError("Platform {platform} not supported by URI function "
-                "{function}".format(platform=osname, function="os_path_to_uri"))
+                raise RuntimeError('Platform {platform} not supported by URI function '
+                '{function}'.format(platform=osname, function='os_path_to_uri'))
         uri = 'file:' + pathname2url(path)
 
     return uri
 
 
 def uri_to_os_path(uri, attemptAbsolute=True, encoding='utf-8', osname=None):
-    r"""
+    r'''
     This function converts a URI reference to an OS-specific file system path.
 
     If the URI reference is given as a Unicode string, then the encoding
@@ -1428,11 +1431,11 @@ def uri_to_os_path(uri, attemptAbsolute=True, encoding='utf-8', osname=None):
     'file://localhost/x/y/z' => r'\x\y\z';
     'file://localhost/c:/x/y/z' => r'C:\x\y\z';
     'file:///C:%5Cx%5Cy%5Cz' (not recommended) => r'C:\x\y\z'
-    """
+    '''
     (scheme, authority, path) = split_uri_ref(uri)[0:3]
     if scheme and scheme != 'file':
-        raise ValueError("Only a 'file' URI can be converted to an OS-specific path; "
-                "URI given was {uri}".format(uri=uri))
+        raise ValueError('Only a `file` URI can be converted to an OS-specific path; '
+                'URI given was {uri}'.format(uri=uri))
     # enforce 'localhost' URI equivalence mandated by RFCs 1630, 1738, 3986
     if authority == 'localhost':
         authority = None
@@ -1506,8 +1509,8 @@ def uri_to_os_path(uri, attemptAbsolute=True, encoding='utf-8', osname=None):
     elif osname == 'posix':
         # a non-empty, non-'localhost' authority component is ambiguous on Unix
         if authority:
-            raise ValueError("A URI containing a remote host name cannot be converted to a "
-                " path on posix; URI given was {uri}".format(uri=uri))
+            raise ValueError('A URI containing a remote host name cannot be converted to a '
+                ' path on posix; URI given was {uri}'.format(uri=uri))
         # %2F in a path segment would indicate a literal '/' in a
         # filename, which is possible on posix, but there is no
         # way to consistently represent it. We'll backslash-escape
@@ -1530,18 +1533,18 @@ def uri_to_os_path(uri, attemptAbsolute=True, encoding='utf-8', osname=None):
                 module = '%surl2path' % osname
                 exec('from %s import url2pathname' % module, globals(), locals())
             except ImportError:
-                raise RuntimeError("Platform {platform} not supported by URI function "
-                "{function}".format(platform=osname, function="uri_to_os_path"))
+                raise RuntimeError('Platform {platform} not supported by URI function '
+                '{function}'.format(platform=osname, function='uri_to_os_path'))
         # drop the scheme before passing to url2pathname
         if scheme:
             uri = uri[len(scheme)+1:]
         return url2pathname(uri)
 
-REG_NAME_HOST_PATTERN = re.compile(r"^(?:(?:[0-9A-Za-z\-_\.!~*'();&=+$,]|(?:%[0-9A-Fa-f]{2}))*)$")
+REG_NAME_HOST_PATTERN = re.compile(r'^(?:(?:[0-9A-Za-z\-_\.!~*\'();&=+$,]|(?:%[0-9A-Fa-f]{2}))*)$')
 
 
 def path_resolve(paths):
-    """
+    '''
     This function takes a list of file URIs.  The first can be
     absolute or relative to the URI equivalent of the current working
     directory. The rest must be relative to the first.
@@ -1549,7 +1552,7 @@ def path_resolve(paths):
     system, and then creates a single final path by resolving each path
     in the list against the following one. This final path is returned
     as a URI.
-    """
+    '''
     if not paths: return paths  # noqa: E701
     paths = [uri_to_os_path(p, attemptAbsolute=False) for p in paths]
     if not os.path.isabs(paths[0]):
@@ -1566,7 +1569,7 @@ def path_resolve(paths):
 
 
 def basejoin(base, iri_ref):
-    """
+    '''
     Merges a base URI reference with another URI reference, returning a
     new URI reference.
 
@@ -1590,7 +1593,7 @@ def basejoin(base, iri_ref):
     setup.xml file as being relative to a path that can be set outside
     the document. When these needs go away, this function probably will,
     too, so it is not advisable to use it.
-    """
+    '''
     if is_absolute(base):
         return absolutize(iri_ref, base)
     else:
@@ -1605,13 +1608,13 @@ def basejoin(base, iri_ref):
 
 
 def join(*uriparts):
-    """
+    '''
     Merges a series of URI reference parts, returning a new URI reference.
 
     Much like iri.basejoin, but takes multiple arguments
-    """
+    '''
     if len(uriparts) == 0:
-        raise TypeError("FIXME...")
+        raise TypeError('FIXME...')
     elif len(uriparts) == 1:
         return uriparts[0]
     else:
@@ -1649,8 +1652,8 @@ def join(*uriparts):
 # Notes from our previous research on 'file:' URI resolution:
 #
 # According to RFC 2396 (original), these are valid absolute URIs:
-#  file:/autoexec.bat     (scheme ":" abs_path)
-#  file:///autoexec.bat   (scheme ":" net_path)
+#  file:/autoexec.bat     (scheme ':' abs_path)
+#  file:///autoexec.bat   (scheme ':' net_path)
 #
 # This one is valid but is not what you'd expect it to be:
 #
@@ -1670,7 +1673,7 @@ def join(*uriparts):
 #   file:C:\WINNT\setuplog.txt
 #   file:/C:\WINNT\setuplog.txt
 #   file:///C:\WINNT\setuplog.txt
-# However, it will also accept "|" in place of the colon after the drive:
+# However, it will also accept '|' in place of the colon after the drive:
 #   file:C|/WINNT/setuplog.txt
 #   file:/C|/WINNT/setuplog.txt
 #   file:///C|/WINNT/setuplog.txt

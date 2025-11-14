@@ -1,9 +1,9 @@
-# -----------------------------------------------------------------------------
-# amara3.uxml.xml
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.xml
 #
 # MicroXML tree objects parsed from XML sources
-#
-# -----------------------------------------------------------------------------
 
 import xml.parsers.expat
 # from xml.sax.saxutils import escape  # also quoteattr?

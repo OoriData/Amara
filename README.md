@@ -79,6 +79,14 @@ for elem in root.xml_descendants():
     print(f'Found element: {elem.xml_name}')
 ```
 
+### "MicroXML?" What's that?
+
+[MicroXML is a W3C Community Project and spec](https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html). A lot of XML veterans, including Uche, Amara's founder, had become fed up with the levels of unnecessary complexity in the XML stack, including XML Namespaces, which charges a huge technical cost in order to solve an overstated problem. Amara implements the MicroXML data model, and allows you to parse into this from tradiional XML and the MicroXML serialization.
+
+In reality, most of the XML-like data you’ll be dealing with is full XML
+1.0, so Amara package provides capabilities to parse legacy XML and reduce it to MicroXML. In many cases the biggest implication of this is that
+namespace information is stripped. You can get very far by just ignoring this, and it opens up the much simpler processing encouraged by MicroXML.
+
 ### HTML5 Processing
 
 ```python
@@ -170,7 +178,7 @@ pip install -U .
 
 ## History
 
-Amara was originally an open source project I created, renaming and expanding on [Anobind 2003](https://www.xml.com/pub/a/2003/08/13/py-xml.html), looking to simplify and rethink XML and related technology processing. It went through a few evolutions and progress had slowed down since the late 2010s.
+Amara was originally an open source project I created, renaming and expanding on [Anobind 2003](https://www.xml.com/pub/a/2003/08/13/py-xml.html), looking to simplify and rethink XML and related technology processing, with an eye to Python. It went through a few evolutions and progress had slowed down since the late 2010s.
 
 Quote from the [revival ticket](https://github.com/uogbuji/amara3-xml/issues/28):
 

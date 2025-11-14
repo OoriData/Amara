@@ -1,16 +1,17 @@
-# -----------------------------------------------------------------------------
-# amara3.uxml.lex
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.lex
 #
 # MicroXML scanner
 #  This is not a full parser, e.g. it doesn't ignore comments, it preserves attribute order, which quotes are used, etc.
 #  It is rather meant as a foundation for proper parsers
-# -----------------------------------------------------------------------------
 
 import sys
 
 import ply.lex as lex
 from ply.lex import TOKEN
-import ply.yacc as yacc  # noqa: F401
+import ply.yacc as yacc
 
 tokens = (
     'NAME','STARTTAG','ENDTAG','GT', 'EQ', 'BOM',

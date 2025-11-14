@@ -1,12 +1,17 @@
-# amara3.uxml.treeutil
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.treeutil
 '''
 Various utilities related to amara3's lightweight tree implementation, includes
 some operations widely associated with DOM, but in the form of utility functions
 rather than methods.
 '''
 
+# ruff: noqa: F401,F403
+
 import itertools
-from amara.uxml.tree import *  # noqa: F403
+from amara.uxml.tree import *
 
 __all__ = ['descendants', 'select_elements', 'select_name', 'select_name_pattern', 'select_value', 'select_attribute', 'following_siblings', 'select_pattern', 'make_pretty']  # noqa: E501
 

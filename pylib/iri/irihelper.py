@@ -1,6 +1,10 @@
-"""
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.iri.irihelper
+'''
 Various IRI utilities
-"""
+'''
 
 import os  # noqa: E401
 # import sys  # noqa: F401
@@ -27,7 +31,7 @@ class iriref(str):
     '''
     def __new__(cls, value):
         if not iri.matches_uri_ref_syntax(value):
-            raise ValueError(_('Invalid IRI reference: "{0}"'.format(value)))  # noqa: F821
+            raise ValueError(_(f'Invalid IRI reference: `{value}`'))  # noqa: F821
         self = super(iriref, cls).__new__(cls, value)
         #self = unicode, cls).__new__(cls, value)
         # optionally do stuff to self here
@@ -48,13 +52,13 @@ class iriref(str):
         return iriref(str(self) + str(tail))
 
     def _get_components(self):
-        """Cache the result of split_uri_ref to avoid repeated parsing"""
+        '''Cache the result of split_uri_ref to avoid repeated parsing'''
         if not hasattr(self, '_cached_components'):
             self._cached_components = iri.split_uri_ref(str(self))
         return self._cached_components
 
     def _get_authority_parts(self):
-        """Cache the result of split_authority to avoid repeated parsing"""
+        '''Cache the result of split_authority to avoid repeated parsing'''
         if not hasattr(self, '_cached_authority_parts'):
             auth = self.authority
             if auth:
@@ -65,52 +69,52 @@ class iriref(str):
 
     @property
     def scheme(self):
-        """The scheme component of the IRI reference"""
+        '''The scheme component of the IRI reference'''
         return self._get_components()[0]
 
     @property
     def authority(self):
-        """The authority component of the IRI reference"""
+        '''The authority component of the IRI reference'''
         return self._get_components()[1]
 
     @property
     def auth(self):
-        """Alias for authority"""
+        '''Alias for authority'''
         return self.authority
 
     @property
     def path(self):
-        """The path component of the IRI reference"""
+        '''The path component of the IRI reference'''
         return self._get_components()[2]
 
     @property
     def query(self):
-        """The query component of the IRI reference"""
+        '''The query component of the IRI reference'''
         return self._get_components()[3]
 
     @property
     def fragment(self):
-        """The fragment component of the IRI reference"""
+        '''The fragment component of the IRI reference'''
         return self._get_components()[4]
 
     @property
     def frag(self):
-        """Alias for fragment"""
+        '''Alias for fragment'''
         return self.fragment
 
     @property
     def userinfo(self):
-        """The userinfo component extracted from the authority"""
+        '''The userinfo component extracted from the authority'''
         return self._get_authority_parts()[0]
 
     @property
     def host(self):
-        """The host component extracted from the authority"""
+        '''The host component extracted from the authority'''
         return self._get_authority_parts()[1]
 
     @property
     def port(self):
-        """The port component extracted from the authority"""
+        '''The port component extracted from the authority'''
         return self._get_authority_parts()[2]
 
 I = iriref  # noqa: E741
@@ -122,17 +126,17 @@ class codex:
 
     HOWEVER: Not enough evidence yet of significant enough improvement for the added complexity. Some observations on Python 3.8.5 on MacOS:
 
-    python -m timeit -s "i1 = 'http://example.org/spam'; i2 = 'http://example.org/eggs';" "i1 == i2; i1 == i1"
+    python -m timeit -s 'i1 = 'http://example.org/spam'; i2 = 'http://example.org/eggs';' 'i1 == i2; i1 == i1'
 
     5000000 loops, best of 5: 39.5 nsec per loop
 
-    python -m timeit -s "i1 = (1, 'spam'); i2 = (1, 'eggs');" "i1 == i2; i1 == i1"
+    python -m timeit -s 'i1 = (1, 'spam'); i2 = (1, 'eggs');' 'i1 == i2; i1 == i1'
 
     5000000 loops, best of 5: 47.6 nsec per loop
 
     Indicates that using a base IRI / tail tuple would make perf *worse*
 
-    python -m timeit -s "i1 = '1:spam'; i2 = '1:eggs';" "i1 == i2; i1 == i1"
+    python -m timeit -s 'i1 = '1:spam'; i2 = '1:eggs';' 'i1 == i2; i1 == i1'
 
     10000000 loops, best of 5: 35.4 nsec per loop
 
@@ -144,19 +148,19 @@ class codex:
 
 # FIXME: Port to use UserDict
 class iridict(dict):
-    """
+    '''
     Dictionary that uses IRIs as keys, attempting some degree of IRI (URI)
     equivalence as defined in RFC 3986 section 6. If IRIs A and B match
     after normalization they wlll lead to identical dictionary behaviors.
     This covers cases such as
-    "http://spam/~x/" <--> "http://spam/%7Ex/" <--> "http://spam/%7ex"
+    'http://spam/~x/' <--> 'http://spam/%7Ex/' <--> 'http://spam/%7ex'
     (viz RFC 3986)
-    and "file:///x" <--> "file://localhost/x"
+    and 'file:///x' <--> 'file://localhost/x'
     (viz RFC 1738).
     It also covers case normalization on the scheme, percent-encoded octets,
     percent-encoding normalization (decoding of octets corresponding to
     unreserved characters).
-    """
+    '''
     # RFC 3986 requires localhost to be the default host no matter
     # what the scheme, but, being descriptive of existing practices,
     # leaves it up to the implementation to decide whether to use this

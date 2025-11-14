@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 # amara.uxpath.functions
 
 '''
@@ -11,8 +14,8 @@ __all__ = [
 
 #import operator
 from functools import wraps
-from amara.uxml.tree import node, element, strval  # noqa: F401
-from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean  # noqa: E501, F401
+from amara.uxml.tree import node, element, strval
+from amara.uxpath.xast import root_node, attribute_node, index_docorder, to_string, to_number, to_boolean
 
 def boolean_arg(ctx, obj):
     '''

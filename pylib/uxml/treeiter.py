@@ -1,9 +1,9 @@
-# -----------------------------------------------------------------------------
-# amara3.uxml.treeiter
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.treeiter
 #
 # Iterator (generator and coroutine) facilities for MicroXML tree objects
-#
-# -----------------------------------------------------------------------------
 
 from collections.abc import Iterable
 

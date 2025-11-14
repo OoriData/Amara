@@ -1,9 +1,10 @@
-# amara3.inputsource
-"""
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.iri.inputsource
+'''
 Utilities for managing data inputs for Amara
-
-Copyright 2008-2015 Uche Ogbuji
-"""
+'''
 
 import os
 import zipfile
@@ -102,7 +103,7 @@ class inputsource(object):
         self.sourcetype = sourcetype
 
         if obj in ('', b''):
-            raise ValueError("Cannot parse an empty string as XML")
+            raise ValueError('Cannot parse an empty string as XML')
 
         if hasattr(obj, 'read'):
             #Create dummy Uri to use as base
@@ -126,7 +127,7 @@ class inputsource(object):
             #    self.iri = iri.os_path_to_uri(obj)
             #    self.stream = urlopen(siri)
         else:
-            raise ValueError("Unable to recognize as an inputsource")
+            raise ValueError('Unable to recognize as an inputsource')
         return
 
     @staticmethod

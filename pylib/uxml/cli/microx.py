@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
 '''
 microx
 
@@ -100,11 +103,9 @@ import logging
 from amara.iri.iri import matches_uri_syntax
 
 from amara.uxml.tree import node
-# from amara.uxml.tree import text, element  # noqa: F401, E501
 from amara.uxml.treeutil import descendants
 from amara.uxpath import context, parse as uxpathparse
 from amara.uxml import tree, xml, xmliter
-# from amara.uxml import writer  # noqa: F401
 from amara.uxml import html5
 
 # FIXME: Maybe use a flag to toggle using MicroXML & XML parser?

@@ -1,4 +1,7 @@
-# amara3.uxml.writer
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.writer
 '''
 Raw XML writer
 '''
@@ -6,7 +9,7 @@ Raw XML writer
 from enum import Enum #https://docs.python.org/3.4/library/enum.html
 from xml.sax.saxutils import escape, quoteattr
 
-from amara.uxml import tree, xml  # noqa: F401
+from amara.uxml import tree, xml
 
 class token(Enum):
     start_open = 1

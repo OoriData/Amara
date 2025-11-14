@@ -1,14 +1,14 @@
-# -----------------------------------------------------------------------------
-# amara3.uxml.xmliter
+# SPDX-FileCopyrightText: 2008-present Uche Ogbuji & Oori Data <info@oori.dev>
+#
+# SPDX-License-Identifier: Apache-2.0
+# amara.uxml.xmliter
 #
 # Iterator (generator and coroutine) facilities for MicroXML tree objects parsed from XML sources
-#
-# -----------------------------------------------------------------------------
 
 import xml.parsers.expat
 
 from . import treeiter
-from .xml import expat_callbacks  # ns_expat_callbacks
+from .xml import expat_callbacks
 
 
 def buffer_handler(accumulator):
