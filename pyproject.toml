@@ -68,11 +68,13 @@ only-include = [
   "pyproject.toml",
 ]
 
-# Hatch environemnts are too fiddly. For example, from `hatch run test` I get 
-# ModuleNotFoundError: No module named 'amara'
-# This may well have to do with my rewriting path in distribution,
-# But I'm not compromising on that, so I guess just install & use
-# e.g. pytest directly (tried dev-mode false, but no difference)
+# Note: hatch environments don't work well with our pylib→amara source remapping.
+# The path remapping in [tool.hatch.build.sources] only applies during wheel building,
+# not in dev environments. Hatch's dev-mode uses editable installs which can't apply
+# the remapping, and dev-mode=false means no install happens at all.
+#
+# We prefer proper installation over dev-mode shortcuts anyway.
+# Use: `uv pip install -U . && pytest test/`
 [tool.hatch.envs.default]
 dependencies = [
   "coverage[toml]>=6.5",
